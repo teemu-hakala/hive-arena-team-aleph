@@ -1,8 +1,11 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include "agent.h"
+#include "team-aleph.h"
+#include <strings.h>
 
 int find_neighbour(agent_info_t info, cell_t type)
 {
@@ -23,8 +26,16 @@ int find_neighbour(agent_info_t info, cell_t type)
 
 command_t think(agent_info_t info)
 {
+	// int fd = open("trace.txt", O_CREAT|O_WRONLY|O_APPEND, 0644);
     cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
+	coords_t bee_coords;
+	static t_cell_history	grid[NUM_ROWS][NUM_COLS];
 
+
+	bee_coords.row = info.row;
+	bee_coords.col = info.col;
+	update_grid(info, grid);
+	// dprintf(fd, "test2\n");
     if (is_bee_with_flower(bee))
     {
         int hive_dir = find_neighbour(info, hive_cell(info.player));
@@ -47,11 +58,7 @@ command_t think(agent_info_t info)
             };
         }
     }
-
-    return (command_t) {
-        .action = MOVE,
-        .direction = rand() % 8
-    };
+	return (best_scout_route(grid, bee_coords));
 }
 
 int main(int argc, char **argv)
@@ -63,7 +70,7 @@ int main(int argc, char **argv)
 
     char *host = argv[1];
     int port = atoi(argv[2]);
-    char *team_name = "example_agent";
+    char *team_name = "team_aleph_agent";
 
     agent_main(host, port, team_name, think);
 }

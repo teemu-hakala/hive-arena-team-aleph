@@ -1,9 +1,9 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -O3 -flto
+CFLAGS=-Wall -Wextra -Werror -O3 -flto -g
 CPPFLAGS=-I../src
 LDFLAGS=-flto -L../bin -lagent
 
-OBJS=main.o
+OBJS=main.o grid.o scouts.o
 NAME=agent
 
 all: $(NAME)

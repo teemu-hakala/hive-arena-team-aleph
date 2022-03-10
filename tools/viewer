@@ -7,4 +7,4 @@ if ! command -v $decomp; then
 fi
 
 cd tools
-lua viewer.lua <($decomp ../$1)
+./lua viewer.lua <($decomp ../$1)

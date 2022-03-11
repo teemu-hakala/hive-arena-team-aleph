@@ -1,14 +1,15 @@
 #include "team-aleph.h"
-#include <fcntl.h>
-#include <stdio.h>
 
-void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS])
+void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
+	t_bee bees[NUM_BEES])
 {
 	// int fd = open("trace2.txt", O_CREAT|O_WRONLY, 0644);
 	// dprintf(fd, "%d\n", info.bee);
 	int temp_row;
 	int temp_col;
 
+	bees[info.bee].coords.row = info.row;
+	bees[info.bee].coords.col = info.col;
 	switch(info.bee) {
 		case 0:
 			grid[info.row][info.col].cell = BEE_ALEPH_0;
@@ -35,7 +36,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS])
 		{
 			if (info.cells[row][col] != OUTSIDE)
 			{
-				
+
 				temp_row = info.row - VIEW_DISTANCE + row;
 				temp_col = info.col - VIEW_DISTANCE + col;
 				grid[temp_row][temp_col].turn = info.turn;
@@ -49,7 +50,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS])
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4) 
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4)
 						{
 							grid[temp_row][temp_col].cell = BEE_ALEPH;
 						} else
@@ -63,7 +64,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS])
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4) 
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4)
 						{
 							grid[temp_row][temp_col].cell = BEE_ALEPH;
 						} else
@@ -77,9 +78,9 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS])
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3_WITH_FLOWER
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER) 
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER)
 						{
-							grid[temp_row][temp_col].cell = BEE_ALEPH_WITH_FLOWER;				
+							grid[temp_row][temp_col].cell = BEE_ALEPH_WITH_FLOWER;
 						} else
 						{
 							grid[temp_row][temp_col].cell = BEE_ENEMY_WITH_FLOWER;
@@ -91,9 +92,9 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS])
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3_WITH_FLOWER
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER) 
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER)
 						{
-							grid[temp_row][temp_col].cell = BEE_ALEPH_WITH_FLOWER;				
+							grid[temp_row][temp_col].cell = BEE_ALEPH_WITH_FLOWER;
 						} else
 						{
 							grid[temp_row][temp_col].cell = BEE_ENEMY_WITH_FLOWER;

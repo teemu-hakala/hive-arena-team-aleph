@@ -3,7 +3,7 @@ CFLAGS=-Wall -Wextra -Werror -O3 -flto -g
 CPPFLAGS=-I../src
 LDFLAGS=-flto -L../bin -lagent
 
-OBJS=main.o grid.o scouts.o
+OBJS=main.o grid.o scouts.o bees_helper.o forager.o
 NAME=agent
 
 all: $(NAME)

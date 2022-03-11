@@ -1,11 +1,4 @@
-#include <time.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include "agent.h"
 #include "team-aleph.h"
-#include <strings.h>
 
 int find_neighbour(agent_info_t info, cell_t type)
 {
@@ -27,16 +20,21 @@ int find_neighbour(agent_info_t info, cell_t type)
 command_t think(agent_info_t info)
 {
 	// int fd = open("trace.txt", O_CREAT|O_WRONLY|O_APPEND, 0644);
-    cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
+    // cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
 	coords_t bee_coords;
 	static t_cell_history	grid[NUM_ROWS][NUM_COLS];
+	static t_bees			bees;
 
-
+	if (info.turn == 0 || info.turn == 1)
+	{
+		bees.forage_distance = NUM_COLS / 2 + 1 - info.player * (NUM_COLS % 2);
+		initialize_bees(bees.bees);
+	}
 	bee_coords.row = info.row;
 	bee_coords.col = info.col;
-	update_grid(info, grid);
+	update_grid(info, grid, bees.bees);
 	// dprintf(fd, "test2\n");
-    if (is_bee_with_flower(bee))
+    /*if (is_bee_with_flower(bee))
     {
         int hive_dir = find_neighbour(info, hive_cell(info.player));
         if (hive_dir >= 0)
@@ -57,8 +55,9 @@ command_t think(agent_info_t info)
                 .direction = flower_dir
             };
         }
-    }
-	return (best_scout_route(grid, bee_coords));
+    }*/
+	//return (best_scout_route(grid, bee_coords));
+	return (best_forage_route(info, grid, &bees));
 }
 
 int main(int argc, char **argv)

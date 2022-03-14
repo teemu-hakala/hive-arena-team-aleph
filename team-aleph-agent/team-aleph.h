@@ -35,10 +35,19 @@ typedef enum grid_cell_e
     HIVE_ENEMY
 } grid_cell_t;
 
+static const coords_t stack_cells[] = {
+    {0, 0},
+    {0, 2},
+    { 1, 1},
+    { 2, 0},
+    { 2, 2},
+};
+
 typedef struct
 {
 	grid_cell_t cell;
-	int turn;
+	int			turn;
+	bool		is_stack;
 } t_cell_history;
 
 typedef enum e_role
@@ -63,6 +72,7 @@ typedef struct
 	int		attackers;
 	int		hive_foragers;
 	int		forage_distance;
+	coords_t	top_left_stack[2];
 }	t_bees;
 
 void	update_grid(agent_info_t info, \
@@ -75,5 +85,8 @@ coords_t	hive_coords(int player);
 command_t	best_forage_route(agent_info_t info, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	t_bees *bees);
+int	get_forage_distance(int player);
+command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees);
+void	create_stacks(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees *bees);
 
 #endif

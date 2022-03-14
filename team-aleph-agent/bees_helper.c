@@ -4,7 +4,7 @@ void	initialize_bees(t_bee bees[NUM_BEES])
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
-		bees[b].role = FORAGER;//SCOUT;
+		bees[b].role = SCOUT;
 		bees[b].target.row = -1;
 	}
 }
@@ -28,4 +28,9 @@ coords_t	hive_coords(int player)
 		return ((coords_t){.row = NUM_ROWS / 2, .col = 1});
 	else
 		return ((coords_t){.row = NUM_ROWS / 2, .col = NUM_COLS - 2});
+}
+
+int	get_forage_distance(int player)
+{
+	return (NUM_COLS / 2 + 1 - player * (NUM_COLS % 2));
 }

@@ -7,27 +7,32 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 			if ((info.player == 0 && bees->bees[info.bee].coords.col >= bees->forage_distance)
 				|| (info.player == 1 && bees->bees[info.bee].coords.col < bees->forage_distance))
 			{
-				if (bees->attackers < 2)
+				if (info.bee == 2 || info.bee == 4)
 				{
 					bees->bees[info.bee].role = ATTACKER;
-					bees->attackers++;
+					bees->bees[info.bee].target.row = -1;
+					return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 				}
 				else
+				{
 					bees->bees[info.bee].role = FORAGER;
+					bees->bees[info.bee].target.row = -1;
+					return (best_forage_route(info, grid, bees));
+				}
 			}
 			else
 			{
-				return (best_scout_route(grid, bees->bees[info.bee].coords));
+				return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 			}
 		case FORAGER:
-			if ((info.player == 0 && bees->bees[info.bee].coords.col < bees->forage_distance / 2)
+			if ((((info.player == 0 && bees->bees[info.bee].coords.col < bees->forage_distance / 2)
 				|| (info.player == 1 && bees->bees[info.bee].coords.col >= bees->forage_distance * 3 / 2))
+				&& bees->hive_foragers < 1)
+				|| no_flowers_in_forage_area(grid, bees->forage_distance, info.player))
 			{
-				if (bees->hive_foragers < 1)
-				{
-					bees->bees[info.bee].role = HIVE_FORAGER;
-					bees->hive_foragers++;
-				}
+				bees->bees[info.bee].role = HIVE_FORAGER;
+				bees->hive_foragers++;
+				return (best_forage_route(info, grid, bees));
 			}
 			else
 			{
@@ -36,8 +41,10 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 		case HIVE_FORAGER:
 			return (best_forage_route(info, grid, bees));
 		case ATTACKER:
-			return (best_scout_route(grid, bees->bees[info.bee].coords));
+			return (best_attack_route(grid, bees->bees[info.bee].coords, info.player));
+		case WAYPOINT:
+			return (best_waypoint_route(grid, &bees->bees[info.bee], info.player));
 		default:
-			return (best_scout_route(grid, bees->bees[info.bee].coords));
+			return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 	}
 }

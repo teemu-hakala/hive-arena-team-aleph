@@ -9,13 +9,15 @@ command_t think(agent_info_t info)
 	if (info.turn == 0 || info.turn == 1)
 	{
 		bees.forage_distance = get_forage_distance(info.player);
-		initialize_bees(bees.bees);
+		initialize_bees(bees.bees, info.player);
 		create_stacks(grid, info.player, &bees);
 		
 	}
+	
 	bee_coords.row = info.row;
 	bee_coords.col = info.col;
 	update_grid(info, grid, bees.bees);
+	printf("bee %d role %d\n", info.bee, bees.bees[info.bee].role);
 	return (choose_action(info, grid, &bees));
 }
 

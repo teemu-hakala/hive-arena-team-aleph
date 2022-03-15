@@ -40,12 +40,33 @@ int	get_info_from_coord(coords_t current, t_cell_history grid[NUM_ROWS][NUM_COLS
 	return (new_info);
 }
 
-command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee)
+command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, int player)
 {
 	coords_t	temp_coord;
 	command_t	best;
 	int			best_distance;
 	int			temp_distance;
+
+	if (player == 0)
+	{
+		temp_coord = direction_to_coords(bee->coords, E);
+		if (grid[temp_coord.row][temp_coord.col].cell == EMPTY_ALEPH)
+		{
+			best.action = MOVE;
+			best.direction = E;
+			return (best);
+		}
+	}
+	else
+	{
+		temp_coord = direction_to_coords(bee->coords, W);
+		if (grid[temp_coord.row][temp_coord.col].cell == EMPTY_ALEPH)
+		{
+			best.action = MOVE;
+			best.direction = W;
+			return (best);
+		}
+	}
 
 	best_distance = NUM_COLS;
 	for (int d = 0; d < 8; d++)

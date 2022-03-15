@@ -79,7 +79,7 @@ typedef struct
 
 void	update_grid(agent_info_t info, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bees[NUM_BEES]);
-command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee);
+command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, int player);
 void	initialize_bees(t_bee bees[NUM_BEES], int player);
 bool	is_aleph_bee_with_flower(grid_cell_t bee);
 int	distance_between_points(coords_t coord0, coords_t coord1);

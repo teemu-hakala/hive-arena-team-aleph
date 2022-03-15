@@ -7,12 +7,11 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 			if ((info.player == 0 && bees->bees[info.bee].coords.col >= bees->forage_distance)
 				|| (info.player == 1 && bees->bees[info.bee].coords.col < bees->forage_distance))
 			{
-				if (bees->attackers < 2)
+				if (info.bee == 2 || info.bee == 4)
 				{
 					bees->bees[info.bee].role = ATTACKER;
-					bees->attackers++;
 					bees->bees[info.bee].target.row = -1;
-					return (best_scout_route(grid, &bees->bees[info.bee]));
+					return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 				}
 				else
 				{
@@ -23,7 +22,7 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 			}
 			else
 			{
-				return (best_scout_route(grid, &bees->bees[info.bee]));
+				return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 			}
 		case FORAGER:
 			if ((((info.player == 0 && bees->bees[info.bee].coords.col < bees->forage_distance / 2)
@@ -46,6 +45,6 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 		case WAYPOINT:
 			return (best_waypoint_route(grid, &bees->bees[info.bee], info.player));
 		default:
-			return (best_scout_route(grid, &bees->bees[info.bee]));
+			return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 	}
 }

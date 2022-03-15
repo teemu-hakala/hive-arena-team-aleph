@@ -13,6 +13,7 @@ command_t think(agent_info_t info)
 		create_stacks(grid, info.player, &bees);
 		
 	}
+	
 	bee_coords.row = info.row;
 	bee_coords.col = info.col;
 	update_grid(info, grid, bees.bees);

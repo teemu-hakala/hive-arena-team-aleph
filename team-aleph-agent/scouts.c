@@ -40,39 +40,63 @@ int	get_info_from_coord(coords_t current, t_cell_history grid[NUM_ROWS][NUM_COLS
 	return (new_info);
 }
 
-command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t bee, int player)
+command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee)
 {
-	command_t	best_command;
-	dir_t		temp_direction;
-	int			best_info;
-	int			temp_info;
-	coords_t			temp_coord;
+	coords_t	temp_coord;
+	command_t	best;
+	int			best_distance;
+	int			temp_distance;
 
-	best_command.action = MOVE;
-	best_command.direction = 0;
-	best_info = 0;
-	
-	for(int i = 0; i < 8; i++)
+	best_distance = NUM_COLS;
+	for (int d = 0; d < 8; d++)
 	{
-		temp_direction = i;
-		temp_coord = direction_to_coords(bee, temp_direction);
+		temp_coord = direction_to_coords(bee->coords, d);
 		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
-			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS
-			|| grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
-			continue;
-		temp_info = get_info_from_coord(temp_coord, grid);
-		if (temp_info > best_info)
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+			continue ;
+		temp_distance = distance_between_points(temp_coord, bee->target);
+		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
+			continue ;
+		if (temp_distance < best_distance)
 		{
-			best_command.direction = temp_direction;
-			best_info = temp_info;
+			best_distance = temp_distance;
+			best.action = MOVE;
+			best.direction = d;
 		}
 	}
-	if (best_info == 0)
-	{
-		if (player == 0)
-			best_command.direction = E;
-		else
-			best_command.direction = W;
-	}
-	return (best_command);
+	return (best);
+
+	// command_t	best_command;
+	// dir_t		temp_direction;
+	// int			best_info;
+	// int			temp_info;
+	// coords_t			temp_coord;
+
+	// best_command.action = MOVE;
+	// best_command.direction = 0;
+	// best_info = 0;
+	
+	// for(int i = 0; i < 8; i++)
+	// {
+	// 	temp_direction = i;
+	// 	temp_coord = direction_to_coords(bee, temp_direction);
+	// 	if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+	// 		|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS
+	// 		|| grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
+	// 		continue;
+	// 	temp_info = get_info_from_coord(temp_coord, grid);
+	// 	if (temp_info > best_info)
+	// 	{
+	// 		best_command.direction = temp_direction;
+	// 		best_info = temp_info;
+	// 	}
+	// }
+	// if (best_info == 0)
+	// {
+	// 	if (player == 0)
+	// 		best_command.direction = E;
+	// 	else
+	// 		best_command.direction = W;
+	// }
+	// return (best_command);
 }

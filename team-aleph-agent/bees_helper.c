@@ -69,7 +69,7 @@ bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int fora
 	return (true);
 }
 
-command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee)
+command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, int player)
 {
 	coords_t	temp_coord;
 	command_t	best;
@@ -87,7 +87,7 @@ command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *be
 		if (temp_distance == 0)
 		{
 			bee->role = SCOUT;
-			bee->target.row = -1;
+			bee->target.col = NUM_COLS - NUM_COLS * player;
 			return ((command_t){.action = MOVE, .direction = d});
 		}
 		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
@@ -100,4 +100,41 @@ command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *be
 		}
 	}
 	return (best);
+}
+
+command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t bee, int player)
+{
+	command_t	best_command;
+	dir_t		temp_direction;
+	int			best_info;
+	int			temp_info;
+	coords_t			temp_coord;
+
+	best_command.action = MOVE;
+	best_command.direction = 0;
+	best_info = 0;
+	
+	for(int i = 0; i < 8; i++)
+	{
+		temp_direction = i;
+		temp_coord = direction_to_coords(bee, temp_direction);
+		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS
+			|| grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
+			continue;
+		temp_info = get_info_from_coord(temp_coord, grid);
+		if (temp_info > best_info)
+		{
+			best_command.direction = temp_direction;
+			best_info = temp_info;
+		}
+	}
+	if (best_info == 0)
+	{
+		if (player == 0)
+			best_command.direction = E;
+		else
+			best_command.direction = W;
+	}
+	return (best_command);
 }

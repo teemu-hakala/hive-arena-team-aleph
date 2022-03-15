@@ -102,7 +102,7 @@ command_t	best_forage_route(agent_info_t info, \
 	}
 	// printf("%d %d\n", bees->bees[info.bee].target.row, bees->bees[info.bee].target.col);
 	if (bees->bees[info.bee].target.row < 0)
-		return (best_scout_route(grid, bees->bees[info.bee].coords, info.player));
+		return (best_scout_route(grid, &bees->bees[info.bee]));
 	best_distance = NUM_COLS;
 	for (int d = 0; d < 8; d++)
 	{

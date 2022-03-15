@@ -40,7 +40,7 @@ int	get_info_from_coord(coords_t current, t_cell_history grid[NUM_ROWS][NUM_COLS
 	return (new_info);
 }
 
-command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t bee)
+command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t bee, int player)
 {
 	command_t	best_command;
 	dir_t		temp_direction;
@@ -56,7 +56,9 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t bee
 	{
 		temp_direction = i;
 		temp_coord = direction_to_coords(bee, temp_direction);
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
+		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS
+			|| grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
 			continue;
 		temp_info = get_info_from_coord(temp_coord, grid);
 		if (temp_info > best_info)
@@ -66,6 +68,11 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t bee
 		}
 	}
 	if (best_info == 0)
-		best_command.direction = rand() % 8;
+	{
+		if (player == 0)
+			best_command.direction = E;
+		else
+			best_command.direction = W;
+	}
 	return (best_command);
 }

@@ -7,4 +7,4 @@ if ! command -v $decomp >/dev/null; then
 fi
 
 toolsdir=$(dirname $0)
-lua $toolsdir/viewer.lua <($decomp $1)
+$toolsdir/lua $toolsdir/viewer.lua <($decomp $1)

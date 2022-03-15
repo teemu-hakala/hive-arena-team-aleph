@@ -41,6 +41,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 	bees[info.bee].coords.col = info.col;
 	switch(info.bee) {
 		case 0:
+			
 			grid[info.row][info.col].cell = BEE_ALEPH_0;
 			break;
 		case 1:

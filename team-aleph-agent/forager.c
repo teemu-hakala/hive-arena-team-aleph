@@ -14,6 +14,7 @@ void	find_flower(t_bee *current_bee, int forage_distance, \
 	iteration_step = -1 + 2 * player;
 	for (int col = forage_distance - 1; col >= 0 && col < NUM_COLS; col += iteration_step)
 	{
+		printf("iterstep %d col %d\n", iteration_step, col);
 		for (int row = 0; row < NUM_ROWS; row++)
 		{
 			if (grid[row][col].cell != FLOWER_ALEPH)
@@ -42,9 +43,7 @@ coords_t find_stack_cell(agent_info_t info, t_bee bee, t_cell_history grid[NUM_R
 	coords_t	temp_cell;
 	int			best_distance;
 	int			temp_distance;
-	int			iteration_step;
 
-	iteration_step = -1 + 2 * info.player;
 	best_cell.row = -1;
 	best_distance = NUM_COLS;
 	for (int idx = 0; idx < 2; idx++)
@@ -53,7 +52,7 @@ coords_t find_stack_cell(agent_info_t info, t_bee bee, t_cell_history grid[NUM_R
 		{
 			temp_cell.row = bees.top_left_stack[idx].row + stack_cells[s].row;
 			temp_cell.col = bees.top_left_stack[idx].col + stack_cells[s].col;
-			if (grid[temp_cell.row][temp_cell.col].cell != EMPTY_ALEPH)
+			if (grid[temp_cell.row][temp_cell.col].cell != EMPTY_ALEPH || grid[temp_cell.row][temp_cell.col].target_stack)
 				continue;
 			temp_distance = distance_between_points(bee.coords,	temp_cell);
 			if (temp_distance < best_distance)
@@ -65,6 +64,7 @@ coords_t find_stack_cell(agent_info_t info, t_bee bee, t_cell_history grid[NUM_R
 	}
 	if (best_cell.row < 0)
 		return (hive_coords(info.player));
+	grid[best_cell.row][best_cell.col].target_stack = true;
 	return (best_cell);
 }
 
@@ -97,20 +97,26 @@ command_t	best_forage_route(agent_info_t info, \
 		else
 			find_flower(&bees->bees[info.bee], bees->forage_distance, \
 				grid, info.player);
+		printf("player %d turn %d bee %d target %d %d cell %d\n", info.player, info.turn, info.bee, bees->bees[info.bee].target.row,
+		bees->bees[info.bee].target.col, grid[bees->bees[info.bee].target.row][bees->bees[info.bee].target.col].cell);
 	}
 	// printf("%d %d\n", bees->bees[info.bee].target.row, bees->bees[info.bee].target.col);
 	if (bees->bees[info.bee].target.row < 0)
-		return (best_scout_route(grid, bees->bees[info.bee].coords));
+		return (best_scout_route(grid, bees->bees[info.bee].coords, info.player));
 	best_distance = NUM_COLS;
 	for (int d = 0; d < 8; d++)
 	{
 		temp_coord = direction_to_coords(bees->bees[info.bee].coords, d);
-
+		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+			continue ;
 		temp_distance = distance_between_points(temp_coord, bees->bees[info.bee].target);
 		// printf("dir %d dist %d\n", d, temp_distance);
 		if (temp_distance == 0)
 		{
 			bees->bees[info.bee].target.row = -1;
+			if (grid[temp_coord.row][temp_coord.col].target_stack)
+				grid[temp_coord.row][temp_coord.col].target_stack = false;
 			return ((command_t){.action = FORAGE, .direction = d});
 		}
 		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)

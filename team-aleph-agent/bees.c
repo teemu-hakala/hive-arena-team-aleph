@@ -7,10 +7,10 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 			if ((info.player == 0 && bees->bees[info.bee].coords.col >= bees->forage_distance)
 				|| (info.player == 1 && bees->bees[info.bee].coords.col < bees->forage_distance))
 			{
-				if (info.bee == 2 || info.bee == 4)
+				if (info.bee == 1 || info.bee == 3)
 				{
 					bees->bees[info.bee].role = ATTACKER;
-					bees->bees[info.bee].target.row = -1;
+					bees->bees[info.bee].target = best_attack_target(bees->bees[info.bee].coords, info.player);
 					return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 				}
 				else
@@ -41,7 +41,7 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 		case HIVE_FORAGER:
 			return (best_forage_route(info, grid, bees));
 		case ATTACKER:
-			return (best_attack_route(grid, bees->bees[info.bee].coords, info.player));
+			return (best_attack_route(grid, &bees->bees[info.bee], info.player));
 		case WAYPOINT:
 			return (best_waypoint_route(grid, &bees->bees[info.bee], info.player));
 		default:

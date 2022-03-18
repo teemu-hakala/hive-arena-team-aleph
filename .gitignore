@@ -8,3 +8,5 @@ bin
 __pycache__
 *.pyc
 .DS_Store
+team-aleph-agent/agent
+agent

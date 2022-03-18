@@ -64,10 +64,10 @@ command_t	best_waypoint_route_attacker(t_cell_history grid[NUM_ROWS][NUM_COLS], 
 }
 
 static const coords_t attacker_zones[2][2][2] = {
-	{{{0, NUM_COLS - 12}, {12, NUM_COLS - 1}},
-	{{12, NUM_COLS - 12}, {NUM_ROWS - 1, NUM_COLS - 1}}},
-	{{{0, 0}, {12, 12}},
-	{{12, 0}, {NUM_ROWS - 1, 12}}}
+	{{{0, NUM_COLS / 2}, {12, NUM_COLS - 1}},
+	{{12, NUM_COLS / 2}, {NUM_ROWS - 1, NUM_COLS - 1}}},
+	{{{0, 0}, {12, NUM_COLS / 2 - 1}},
+	{{12, 0}, {NUM_ROWS - 1, NUM_COLS / 2 - 1}}}
 };
 
 void	find_attack_flower(t_bee *current_bee, \

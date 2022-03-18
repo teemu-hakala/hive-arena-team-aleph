@@ -96,7 +96,7 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 	// best_command.action = MOVE;
 	// best_command.direction = 0;
 	// best_info = 0;
-	
+
 	// for(int i = 0; i < 8; i++)
 	// {
 	// 	temp_direction = i;

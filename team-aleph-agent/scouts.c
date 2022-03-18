@@ -46,6 +46,7 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 	command_t	best;
 	int			best_distance;
 	int			temp_distance;
+	dir_t		last_available_direction;
 
 	if (player == 0)
 	{
@@ -73,11 +74,15 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 	{
 		temp_coord = direction_to_coords(bee->coords, d);
 		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
-			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS
+			|| grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
 			continue ;
+		if (coords_equal(temp_coord, bee->previous_position))
+		{
+			last_available_direction = d;
+			continue ;
+		}
 		temp_distance = distance_between_points(temp_coord, bee->target);
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
-			continue ;
 		if (temp_distance < best_distance)
 		{
 			best_distance = temp_distance;
@@ -85,6 +90,8 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 			best.direction = d;
 		}
 	}
+	if (best_distance == NUM_COLS)
+		return ((command_t) {.direction = last_available_direction, .action = MOVE});
 	return (best);
 
 	// command_t	best_command;

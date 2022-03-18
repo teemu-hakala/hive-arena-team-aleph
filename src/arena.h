@@ -3,7 +3,7 @@
 
 #include "arena_common.h"
 
-#define NUM_FLOWERS_MIN 30
+#define NUM_FLOWERS_MIN 300
 #define NUM_FLOWERS_RANGE 10
 
 typedef struct

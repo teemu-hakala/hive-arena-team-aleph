@@ -13,12 +13,16 @@ static const coords_t scout_targets[2][5] = {
 	{21, 26}}
 };
 
-void	initialize_bees(t_bee bees[NUM_BEES], int player)
+void	initialize_bees(t_bee bees[NUM_BEES], agent_info_t info)
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
 		bees[b].role = WAYPOINT;
-		bees[b].target = scout_targets[player][b];
+		bees[b].target = scout_targets[info.player][b];
+		bees[b].previous_position.row = info.row;
+		bees[b].previous_position.col = info.col;
+		bees[b].previous_turn.row = info.row;
+		bees[b].previous_turn.col = info.col;
 	}
 }
 
@@ -46,6 +50,11 @@ coords_t	hive_coords(int player)
 int	get_forage_distance(int player)
 {
 	return (NUM_COLS / 2 + 1 - player * (NUM_COLS % 2));
+}
+
+bool	coords_equal(coords_t coords0, coords_t coords1)
+{
+	return (coords0.row == coords1.row && coords0.col == coords1.col);
 }
 
 bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int player)

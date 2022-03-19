@@ -84,19 +84,39 @@ void	find_attack_flower(t_bee *current_bee, \
 	coords_t	best;
 	int			best_distance;
 	int			temp_distance;
-	int			attacker;
+	int			zone_start_row;
+	int			zone_end_row;
+	int			zone_start_col;
+	int			zone_end_col;
 
 	if (info.bee == 1)
-		attacker = 0;
+	{
+		zone_start_row = attacker_zones[info.player][0][0].row;
+		zone_start_col = attacker_zones[info.player][0][0].col;
+		zone_end_row = attacker_zones[info.player][0][1].row;
+		zone_end_col = attacker_zones[info.player][0][1].col;
+	}
+	else if (info.bee == 3)
+	{
+		zone_start_row = attacker_zones[info.player][1][0].row;
+		zone_start_col = attacker_zones[info.player][1][0].col;
+		zone_end_row = attacker_zones[info.player][1][1].row;
+		zone_end_col = attacker_zones[info.player][1][1].col;
+	}
 	else
-		attacker = 1;
+	{
+		zone_start_row = 0;
+		zone_start_col = 0;
+		zone_end_row = NUM_ROWS - 1;
+		zone_end_col = NUM_COLS - 1;
+	}
 
 	best_distance = NUM_COLS;
 	best.row = -1;
 	best.col = -1;
-	for (int row = attacker_zones[info.player][attacker][0].row; row <= attacker_zones[info.player][attacker][1].row; row++)
+	for (int row = zone_start_row; row <= zone_end_row; row++)
 	{
-		for (int col = attacker_zones[info.player][attacker][0].col; col <= attacker_zones[info.player][attacker][1].col; col++)
+		for (int col = zone_start_col; col <= zone_end_col; col++)
 		{
 			if (grid[row][col].cell != FLOWER_ALEPH)
 				continue ;
@@ -225,8 +245,13 @@ command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee,
 			{
 				if (no_info_in_attack_area(grid, info))
 					return (best_explore_route(grid, bee, info));
-				bee->role = FORAGER;
-				return (best_forage_route(info, grid, bees));
+				else if (!no_flowers_in_forage_area(grid, bees->forage_distance, NUM_COLS * info.player, info.player))
+				{
+					bee->role = FORAGER;
+					return (best_forage_route(info, grid, bees));
+				}
+				else
+					return (best_scout_route(grid, &bees->bees[info.bee], info.player));
 			}
 			return (best_waypoint_route_attacker(grid, bee));
 		}

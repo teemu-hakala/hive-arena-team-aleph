@@ -153,7 +153,15 @@ command_t	best_forage_route(agent_info_t info, \
 	}
 	// printf("%d %d\n", bees->bees[info.bee].target.row, bees->bees[info.bee].target.col);
 	if (bees->bees[info.bee].target.row < 0)
-		return (best_scout_route(grid, &bees->bees[info.bee], info.player));
+	{
+		if (!no_flowers_in_forage_area(grid, 0, NUM_COLS, info.player))
+		{
+			bees->bees[info.bee].role = ATTACKER;
+			return (best_attack_route(grid, &bees->bees[info.bee], info, bees));
+		}
+		else
+			return (best_scout_route(grid, &bees->bees[info.bee], info.player));
+	}
 	best_distance = NUM_COLS;
 	for (int d = 0; d < 8; d++)
 	{

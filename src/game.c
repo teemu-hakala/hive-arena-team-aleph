@@ -68,6 +68,17 @@ void run_game(arena_t *arena, server_t *server)
     {
         fprintf(server->log, "# Draw\n");
     }
+	if (arena->winner != -1)
+    {
+        printf("# Winner: player %d (%s)\n",
+            arena->winner,
+            server->clients[arena->winner].name
+        );
+    }
+    else
+    {
+        printf("# Draw\n");
+    }
 }
 
 int main(int argc, char **argv)

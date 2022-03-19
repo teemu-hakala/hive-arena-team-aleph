@@ -48,6 +48,40 @@ int	get_forage_distance(int player)
 	return (NUM_COLS / 2 + 1 - player * (NUM_COLS % 2));
 }
 
+bool	coords_equal(coords_t coords0, coords_t coords1)
+{
+	return (coords0.row == coords1.row && coords0.col == coords1.col);
+}
+
+bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee)
+{
+	coords_t	temp_coord;
+
+	for (int row = current_bee->coords.row - VIEW_DISTANCE; row <= current_bee->coords.row + VIEW_DISTANCE; row++)
+	{
+		for (int col = current_bee->coords.col - VIEW_DISTANCE; col <= current_bee->coords.col + VIEW_DISTANCE; col++)
+		{
+			if (row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS)
+				continue ;
+			if (grid[row][col].cell == BEE_ENEMY /*|| grid[row][col].cell == BEE_ENEMY_WITH_FLOWER*/)
+			{
+				for (int d = 0; d < 8; d++)
+				{
+					temp_coord = direction_to_coords(current_bee->coords, d);
+					if (distance_between_points(current_bee->coords, temp_coord) == 1 \
+						&& (grid[temp_coord.row][temp_coord.col].cell == FLOWER_ALEPH \
+						|| grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER))
+					{
+						current_bee->target = temp_coord;
+						return (true);
+					}
+				}
+			}
+		}
+	}
+	return (false);
+}
+
 bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int player)
 {
 	int iteration_step;

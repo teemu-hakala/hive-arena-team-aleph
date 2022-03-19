@@ -95,5 +95,7 @@ command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *be
 command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info, t_bees *bees);
 int	get_info_from_coord(coords_t current, t_cell_history grid[NUM_ROWS][NUM_COLS]);
 coords_t	best_attack_target(int player, int index);
+bool	coords_equal(coords_t coords0, coords_t coords1);
+bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
 
 #endif

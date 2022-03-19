@@ -1,6 +1,6 @@
 #include "team-aleph.h"
 
-void	find_flower(t_bee *current_bee, int forage_distance, \
+void	find_flower_in_forage_distance(t_bee *current_bee, int forage_distance, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], int player)
 {
 	coords_t	best;
@@ -34,7 +34,34 @@ void	find_flower(t_bee *current_bee, int forage_distance, \
 			return ;
 		}
 	}
+}
 
+void	find_flower(t_bee *current_bee, int forage_distance, \
+	t_cell_history grid[NUM_ROWS][NUM_COLS], int player)
+{
+	int hive_forage_distance;
+
+	if (player == 0)
+		hive_forage_distance = forage_distance / 2;
+	else
+		hive_forage_distance = forage_distance * 3 / 2;
+	if (enemy_bee_is_close_and_adjacent_flower(grid, current_bee))
+	{
+		return ;
+	}
+	switch (current_bee->role)
+	{
+		case FORAGER:
+			find_flower_in_forage_distance(current_bee, forage_distance, \
+				grid, player);
+			break ;
+		case HIVE_FORAGER:
+			find_flower_in_forage_distance(current_bee, hive_forage_distance, \
+				grid, player);
+			break ;
+		default:
+			break ;
+	}
 }
 
 coords_t find_stack_cell(agent_info_t info, t_bee bee, t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees bees)
@@ -81,6 +108,24 @@ coords_t	target_for_flower(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_
 	}
 }
 
+bool	target_is_invalid(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee, agent_info_t info)
+{
+	if (grid[current_bee->target.row][current_bee->target.col].cell != TARGET_FLOWER \
+		&& !is_aleph_bee_with_flower(grid[info.row][info.col].cell))
+	{
+		current_bee->target.row = -1;
+		return (true);
+	}
+	else if (grid[current_bee->target.row][current_bee->target.col].cell != TARGET_FLOWER \
+		&& !coords_equal(hive_coords(info.player), current_bee->target) \
+		&& distance_between_points(current_bee->coords, current_bee->target) < 2)
+	{
+		current_bee->target = hive_coords(info.player);
+		return (true);
+	}
+	return (false);
+}
+
 command_t	best_forage_route(agent_info_t info, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	t_bees *bees)
@@ -92,7 +137,7 @@ command_t	best_forage_route(agent_info_t info, \
 	bool		is_wall;
 
 	is_wall = false;
-	if (bees->bees[info.bee].target.row < 0)
+	if (bees->bees[info.bee].target.row < 0 || target_is_invalid(grid, &bees->bees[info.bee], info))
 	{
 		if (is_aleph_bee_with_flower(grid[info.row][info.col].cell))
 			bees->bees[info.bee].target = target_for_flower(info, grid, bees);

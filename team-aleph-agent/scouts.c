@@ -46,7 +46,9 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 	command_t	best;
 	int			best_distance;
 	int			temp_distance;
+	bool		is_wall;
 
+	is_wall = false;
 	if (player == 0)
 	{
 		temp_coord = direction_to_coords(bee->coords, E);
@@ -76,15 +78,21 @@ command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
 			continue ;
 		temp_distance = distance_between_points(temp_coord, bee->target);
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
+		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
 			continue ;
-		if (temp_distance < best_distance)
+		if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
 		{
 			best_distance = temp_distance;
 			best.action = MOVE;
 			best.direction = d;
+			if (grid[temp_coord.row][temp_coord.col].cell == WALL_ENEMY)
+				is_wall = true;
+			else
+				is_wall = false;
 		}
 	}
+	if (is_wall)
+		best.action = GUARD;
 	return (best);
 
 	// command_t	best_command;

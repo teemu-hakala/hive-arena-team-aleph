@@ -34,8 +34,10 @@ command_t	best_waypoint_route_attacker(t_cell_history grid[NUM_ROWS][NUM_COLS], 
 	command_t	best;
 	int			best_distance;
 	int			temp_distance;
+	bool		is_wall;
 
 	best_distance = NUM_COLS;
+	is_wall = false;
 	for (int d = 0; d < 8; d++)
 	{
 		temp_coord = direction_to_coords(bee->coords, d);
@@ -51,15 +53,21 @@ command_t	best_waypoint_route_attacker(t_cell_history grid[NUM_ROWS][NUM_COLS], 
 				return ((command_t){.action = GUARD, .direction = d});
 			return ((command_t){.action = MOVE, .direction = d});
 		}
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH)
+		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
 			continue ;
-		if (temp_distance < best_distance)
+		if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
 		{
 			best_distance = temp_distance;
 			best.action = MOVE;
 			best.direction = d;
+			if (grid[temp_coord.row][temp_coord.col].cell == WALL_ENEMY)
+				is_wall = true;
+			else
+				is_wall = false;
 		}
 	}
+	if (is_wall)
+		best.action = GUARD;
 	return (best);
 }
 

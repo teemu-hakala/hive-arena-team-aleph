@@ -50,6 +50,25 @@ static void place_flowers(arena_t *arena)
     }
 }
 
+// static void place_walls(arena_t *arena)
+// {
+//     int num_walls = 150;
+//     int count = 0;
+
+//     while (count < num_walls)
+//     {
+//         int row = arena_random(arena, NUM_ROWS);
+//         int col = arena_random(arena, NUM_COLS);
+
+//         cell_t *cell = &arena->cells[row][col];
+//         if (*cell == EMPTY)
+//         {
+//             *cell = WALL;
+//             count++;
+//         }
+//     }
+// }
+
 arena_t *arena_new(int seed)
 {
     arena_t *arena = (arena_t *)malloc(sizeof(arena_t));
@@ -75,6 +94,7 @@ arena_t *arena_new(int seed)
 
     place_teams(arena);
     place_flowers(arena);
+	// place_walls(arena);
 
     return arena;
 }

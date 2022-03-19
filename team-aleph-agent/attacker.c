@@ -114,6 +114,103 @@ void	find_attack_flower(t_bee *current_bee, \
 		grid[best.row][best.col].cell = TARGET_FLOWER;
 }
 
+
+bool	no_info_in_attack_area(t_cell_history grid[NUM_ROWS][NUM_COLS], agent_info_t info)
+{
+	int			attacker;
+
+	if (info.bee == 1)
+		attacker = 0;
+	else
+		attacker = 1;
+
+	for (int row = attacker_zones[info.player][attacker][0].row; row <= attacker_zones[info.player][attacker][1].row; row++)
+	{
+		for (int col = attacker_zones[info.player][attacker][0].col; col <= attacker_zones[info.player][attacker][1].col; col++)
+		{
+			if (grid[row][col].cell == NO_INFO)
+				return (true);
+		}
+	}
+	return (false);
+}
+
+coords_t	find_explore_target(t_cell_history grid[NUM_ROWS][NUM_COLS], agent_info_t info)
+{
+	int			attacker;
+	coords_t	temp_coord;
+	int			best_info;
+	int			temp_info;
+	coords_t	best;
+
+	best_info = 0;
+
+	if (info.bee == 1)
+		attacker = 0;
+	else
+		attacker = 1;
+
+	for (int row = attacker_zones[info.player][attacker][0].row; row <= attacker_zones[info.player][attacker][1].row; row++)
+	{
+		for (int col = attacker_zones[info.player][attacker][0].col; col <= attacker_zones[info.player][attacker][1].col; col++)
+		{
+			temp_coord.row = row;
+			temp_coord.col = col;
+			temp_info = get_info_from_coord(temp_coord, grid);
+			if (temp_info > best_info)
+			{
+				best_info = temp_info;
+				best = temp_coord;
+			}
+		}
+	}
+	return (best);
+}
+
+command_t	best_explore_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info)
+{
+	coords_t	temp_coord;
+	command_t	best;
+	int			best_distance;
+	int			temp_distance;
+	bool		is_wall;
+	coords_t	temp_target;
+
+	temp_target = find_explore_target(grid, info);
+	best_distance = NUM_COLS;
+	is_wall = false;
+	for (int d = 0; d < 8; d++)
+	{
+		temp_coord = direction_to_coords(bee->coords, d);
+		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+			continue ;
+
+		temp_distance = distance_between_points(temp_coord, temp_target);
+		if (temp_distance == 0)
+		{
+			if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
+				return ((command_t){.action = GUARD, .direction = d});
+			return ((command_t){.action = MOVE, .direction = d});
+		}
+		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
+			continue ;
+		if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
+		{
+			best_distance = temp_distance;
+			best.action = MOVE;
+			best.direction = d;
+			if (grid[temp_coord.row][temp_coord.col].cell == WALL_ENEMY)
+				is_wall = true;
+			else
+				is_wall = false;
+		}
+	}
+	if (is_wall)
+		best.action = GUARD;
+	return (best);
+}
+
 command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info, t_bees *bees)
 {
 
@@ -126,6 +223,8 @@ command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee,
 			find_attack_flower(bee, grid, info);
 			if (bee->target.row < 0)
 			{
+				if (no_info_in_attack_area(grid, info))
+					return (best_explore_route(grid, bee, info));
 				bee->role = FORAGER;
 				return (best_forage_route(info, grid, bees));
 			}

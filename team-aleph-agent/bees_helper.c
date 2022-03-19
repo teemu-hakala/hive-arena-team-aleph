@@ -38,15 +38,27 @@ bool	is_aleph_bee_with_flower(grid_cell_t bee)
 coords_t	hive_coords(int player)
 {
 	if (player == 0)
-		return ((coords_t){.row = NUM_ROWS / 2, .col = 1});
+		return ((coords_t){.row = 12, .col = 1});
 	else
-		return ((coords_t){.row = NUM_ROWS / 2, .col = NUM_COLS - 2});
+		return ((coords_t){.row = 12, .col = 28});
 }
 
 int	get_forage_distance(int player)
 {
-	return (NUM_COLS / 2 + 1 - player * (NUM_COLS % 2));
+	if (player == 0)
+		return (15);
+	else
+		return(14);
 }
+
+int	get_hive_forage_distance(int player)
+{
+	if (player == 0)
+		return (6);
+	else
+		return(23);
+}
+
 
 bool	coords_equal(coords_t coords0, coords_t coords1)
 {
@@ -82,17 +94,12 @@ bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_CO
 	return (false);
 }
 
-bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int player)
+bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int hive_forage_distance, int player)
 {
 	int iteration_step;
-	int	stop_line;
 
 	iteration_step = -1 + 2 * player;
-	if (player == 0)
-		stop_line = forage_distance / 2;
-	else
-		stop_line = forage_distance * 3 / 2 - 1;
-	for (int col = forage_distance - 1; col != stop_line; col += iteration_step)
+	for (int col = forage_distance; col != hive_forage_distance; col += iteration_step)
 	{
 		for (int row = 0; row < NUM_ROWS; row++)
 		{

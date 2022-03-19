@@ -74,6 +74,7 @@ typedef struct
 	int		attackers;
 	int		hive_foragers;
 	int		forage_distance;
+	int		hive_forage_distance;
 	coords_t	top_left_stack[2];
 }	t_bees;
 
@@ -88,9 +89,10 @@ command_t	best_forage_route(agent_info_t info, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	t_bees *bees);
 int	get_forage_distance(int player);
+int	get_hive_forage_distance(int player);
 command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees);
 void	create_stacks(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees *bees);
-bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int player);
+bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int hive_forage_distance, int player);
 command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, int player);
 command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info, t_bees *bees);
 int	get_info_from_coord(coords_t current, t_cell_history grid[NUM_ROWS][NUM_COLS]);

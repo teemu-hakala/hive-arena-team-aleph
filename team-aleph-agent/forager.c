@@ -12,9 +12,9 @@ void	find_flower_in_forage_distance(t_bee *current_bee, int forage_distance, \
 	best.col = -1;
 	best_distance = NUM_COLS;
 	iteration_step = -1 + 2 * player;
-	for (int col = forage_distance - 1; col >= 0 && col < NUM_COLS; col += iteration_step)
+	for (int col = forage_distance; col >= 0 && col < NUM_COLS; col += iteration_step)
 	{
-		printf("iterstep %d col %d\n", iteration_step, col);
+		// printf("iterstep %d col %d\n", iteration_step, col);
 		for (int row = 0; row < NUM_ROWS; row++)
 		{
 			if (grid[row][col].cell != FLOWER_ALEPH)
@@ -37,14 +37,8 @@ void	find_flower_in_forage_distance(t_bee *current_bee, int forage_distance, \
 }
 
 void	find_flower(t_bee *current_bee, int forage_distance, \
-	t_cell_history grid[NUM_ROWS][NUM_COLS], int player)
+	t_cell_history grid[NUM_ROWS][NUM_COLS], int player, int hive_forage_distance)
 {
-	int hive_forage_distance;
-
-	if (player == 0)
-		hive_forage_distance = forage_distance / 2;
-	else
-		hive_forage_distance = forage_distance * 3 / 2;
 	if (enemy_bee_is_close_and_adjacent_flower(grid, current_bee))
 	{
 		return ;
@@ -143,7 +137,7 @@ command_t	best_forage_route(agent_info_t info, \
 			bees->bees[info.bee].target = target_for_flower(info, grid, bees);
 		else
 			find_flower(&bees->bees[info.bee], bees->forage_distance, \
-				grid, info.player);
+				grid, info.player, bees->hive_forage_distance);
 		// printf("player %d turn %d bee %d target %d %d cell %d\n", info.player, info.turn, info.bee, bees->bees[info.bee].target.row,
 		// bees->bees[info.bee].target.col, grid[bees->bees[info.bee].target.row][bees->bees[info.bee].target.col].cell);
 	}

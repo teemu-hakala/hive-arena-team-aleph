@@ -28,7 +28,7 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 			if ((((info.player == 0 && bees->bees[info.bee].coords.col < bees->forage_distance / 2)
 				|| (info.player == 1 && bees->bees[info.bee].coords.col >= bees->forage_distance * 3 / 2))
 				&& bees->hive_foragers < 1)
-				|| no_flowers_in_forage_area(grid, bees->forage_distance, bees->hive_forage_distance, info.player))
+				|| no_flowers_in_forage_area(grid, bees->forage_distance, info.player))
 			{
 				bees->bees[info.bee].role = HIVE_FORAGER;
 				bees->hive_foragers++;

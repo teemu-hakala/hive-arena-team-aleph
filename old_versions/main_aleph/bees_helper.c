@@ -38,85 +38,27 @@ bool	is_aleph_bee_with_flower(grid_cell_t bee)
 coords_t	hive_coords(int player)
 {
 	if (player == 0)
-		return ((coords_t){.row = 12, .col = 1});
+		return ((coords_t){.row = NUM_ROWS / 2, .col = 1});
 	else
-		return ((coords_t){.row = 12, .col = 28});
+		return ((coords_t){.row = NUM_ROWS / 2, .col = NUM_COLS - 2});
 }
 
 int	get_forage_distance(int player)
 {
-	if (player == 0)
-		return (15);
-	else
-		return(14);
+	return (NUM_COLS / 2 + 1 - player * (NUM_COLS % 2));
 }
 
-int	get_hive_forage_distance(int player)
-{
-	if (player == 0)
-		return (6);
-	else
-		return(23);
-}
-
-
-bool	coords_equal(coords_t coords0, coords_t coords1)
-{
-	return (coords0.row == coords1.row && coords0.col == coords1.col);
-}
-
-bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee)
-{
-	coords_t	temp_coord;
-
-	for (int row = current_bee->coords.row - VIEW_DISTANCE; row <= current_bee->coords.row + VIEW_DISTANCE; row++)
-	{
-		for (int col = current_bee->coords.col - VIEW_DISTANCE; col <= current_bee->coords.col + VIEW_DISTANCE; col++)
-		{
-			if (row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS)
-				continue ;
-			if (grid[row][col].cell == BEE_ENEMY /*|| grid[row][col].cell == BEE_ENEMY_WITH_FLOWER*/)
-			{
-				for (int d = 0; d < 8; d++)
-				{
-					temp_coord = direction_to_coords((coords_t) {.row = row, .col = col}, d);
-					if (distance_between_points(current_bee->coords, temp_coord) == 1 \
-						&& (grid[temp_coord.row][temp_coord.col].cell == FLOWER_ALEPH \
-						|| grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER))
-					{
-						current_bee->target = temp_coord;
-						return (true);
-					}
-				}
-			}
-		}
-	}
-	return (false);
-}
-
-bool	enemy_bee_is_close(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee)
-{
-	for (int row = current_bee->coords.row - VIEW_DISTANCE; row <= current_bee->coords.row + VIEW_DISTANCE; row++)
-	{
-		for (int col = current_bee->coords.col - VIEW_DISTANCE; col <= current_bee->coords.col + VIEW_DISTANCE; col++)
-		{
-			if (row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS)
-				continue ;
-			if (grid[row][col].cell == BEE_ENEMY /*|| grid[row][col].cell == BEE_ENEMY_WITH_FLOWER*/)
-			{
-				return (true);
-			}
-		}
-	}
-	return (false);
-}
-
-bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int hive_forage_distance, int player)
+bool	no_flowers_in_forage_area(t_cell_history grid[NUM_ROWS][NUM_COLS], int forage_distance, int player)
 {
 	int iteration_step;
+	int	stop_line;
 
 	iteration_step = -1 + 2 * player;
-	for (int col = forage_distance; col != hive_forage_distance; col += iteration_step)
+	if (player == 0)
+		stop_line = forage_distance / 2;
+	else
+		stop_line = forage_distance * 3 / 2 - 1;
+	for (int col = forage_distance - 1; col != stop_line; col += iteration_step)
 	{
 		for (int row = 0; row < NUM_ROWS; row++)
 		{

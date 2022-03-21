@@ -6,7 +6,7 @@
 /*   By: jraivio <jraivio@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 17:28:30 by jraivio           #+#    #+#             */
-/*   Updated: 2022/03/21 20:04:30 by jraivio          ###   ########.fr       */
+/*   Updated: 2022/03/21 20:18:54 by jraivio          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static coords_t		get_target(int player, t_bees bees)
 	while (i < 5)
 		if (bees.bees[i++].role == BUILDER)
 			builder_count++;
-	target = hive_coords(player);
+	target = hive_coords(player ? 0 : 1);
 	target.row += builder_offsets[builder_count - 1].row;
 	target.col += builder_offsets[builder_count - 1].col * player ? 1 : -1;
 	return (target);

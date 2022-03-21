@@ -20,7 +20,7 @@ void	create_stacks(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees *
 		col = 4;
 	else
 		col = 23;
-	
+
 	initialize_stack((coords_t) {.row = row1, .col = col}, grid);
 	initialize_stack((coords_t) {.row = row2, .col = col}, grid);
 	bees->top_left_stack[0].row = row1;
@@ -41,7 +41,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 	bees[info.bee].coords.col = info.col;
 	switch(info.bee) {
 		case 0:
-			
+
 			grid[info.row][info.col].cell = BEE_ALEPH_0;
 			break;
 		case 1:
@@ -72,7 +72,12 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 				grid[temp_row][temp_col].turn = info.turn;
 				switch(info.cells[row][col]) {
 					case EMPTY:
-						grid[temp_row][temp_col].cell = EMPTY_ALEPH;
+						if (grid[temp_row][temp_col].cell == WALL_TARGET)
+							grid[temp_row][temp_col].cell = EMPTY_TARGET;
+						else if (grid[temp_row][temp_col].cell == EMPTY_TARGET)
+							;
+						else
+							grid[temp_row][temp_col].cell = EMPTY_ALEPH;
 						break;
 					case BEE_0:
 						if (info.player == 0
@@ -134,7 +139,8 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						grid[temp_row][temp_col].cell = FLOWER_ALEPH;
 						break;
 					case WALL:
-						if (grid[temp_row][temp_col].cell != WALL_ALEPH)
+						if (grid[temp_row][temp_col].cell != WALL_ALEPH ||
+							grid[temp_row][temp_col].cell != WALL_TARGET)
 							grid[temp_row][temp_col].cell = WALL_ENEMY;
 						break;
 					case HIVE_0:

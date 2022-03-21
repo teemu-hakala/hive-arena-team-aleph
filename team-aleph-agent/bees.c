@@ -6,7 +6,7 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 		case FORAGER:
 			if (info.turn > TURNS_FORAGING && !is_aleph_bee_with_flower(grid[info.row][info.col].cell))
 			{
-				if (bees->builders < 2)
+				if (bees->builders < 3)
 				{
 					bees->bees[info.bee].target.row = -1;
 					bees->bees[info.bee].role = BUILDER;

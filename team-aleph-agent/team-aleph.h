@@ -9,12 +9,13 @@
 #include <stdbool.h>
 #include "agent.h"
 
-#define TURNS_FORAGING 300
+#define TURNS_FORAGING 100
 
 typedef enum grid_cell_e
 {
 	NO_INFO,
     EMPTY_ALEPH,
+	EMPTY_TARGET,
 	BEE_ALEPH,
     BEE_ALEPH_0,
 	BEE_ALEPH_1,

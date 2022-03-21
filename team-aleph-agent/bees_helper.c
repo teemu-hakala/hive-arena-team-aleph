@@ -17,9 +17,12 @@ void	initialize_bees(t_bee bees[NUM_BEES])
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
-		if (b % 2 == 1)
+		/*if (b % 2 == 1)
+		{
 			bees[b].role = BUILDER;
-		else
+
+		}
+		else*/
 			bees[b].role = FORAGER;
 		bees[b].target.row = -1;
 	}
@@ -33,7 +36,7 @@ int	distance_between_points(coords_t coord0, coords_t coord1)
 		return (abs(coord0.col - coord1.col));
 }
 
-bool	is_aleph_bee_with_flower(grid_cell_t bee) 
+bool	is_aleph_bee_with_flower(grid_cell_t bee)
 {
 	return (bee >= BEE_ALEPH_WITH_FLOWER && bee <= BEE_ALEPH_4_WITH_FLOWER);
 }

@@ -82,9 +82,9 @@ coords_t	find_explore_forage_target(t_cell_history grid[NUM_ROWS][NUM_COLS], age
 
 	best_info = 0;
 
-	for (int row = info.row - 10; row <= info.row + 10; row++)
+	for (int row = info.row - 25; row <= info.row + 25; row++)
 	{
-		for (int col = info.col - 10; col <= info.col + 10; col++)
+		for (int col = info.col - 30; col <= info.col + 30; col++)
 		{
 			temp_coord.row = row;
 			temp_coord.col = col;
@@ -157,7 +157,7 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 		return (best_waypoint_route_forager(grid, bee));
 	}
 	else
-	{	
+	{
 		if (is_aleph_bee_with_flower(grid[info.row][info.col].cell))
 			bee->target = hive_coords(info.player);
 		else

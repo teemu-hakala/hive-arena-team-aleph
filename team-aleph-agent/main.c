@@ -12,9 +12,10 @@ command_t think(agent_info_t info)
 		bees.hive_forage_distance = get_hive_forage_distance(info.player);
 		initialize_bees(bees.bees);
 		create_stacks(grid, info.player, &bees);
-		
+		bees.builders = 0;
+		bees.attackers = 0;
 	}
-	
+
 //	bee_coords.row = info.row;
 //	bee_coords.col = info.col;
 	update_grid(info, grid, bees.bees);

@@ -78,12 +78,14 @@ typedef struct
 	coords_t	coords;
 	bool		with_flower;
 	coords_t	target;
+	int			builder_index;
 } t_bee;
 
 typedef struct
 {
 	t_bee	bees[NUM_BEES];
 	int		attackers;
+	int		builders;
 	int		hive_foragers;
 	int		forage_distance;
 	int		hive_forage_distance;

@@ -10,7 +10,7 @@ command_t think(agent_info_t info)
 	{
 		bees.forage_distance = get_forage_distance(info.player);
 		bees.hive_forage_distance = get_hive_forage_distance(info.player);
-		initialize_bees(bees.bees, info.player);
+		initialize_bees(bees.bees);
 		create_stacks(grid, info.player, &bees);
 		
 	}

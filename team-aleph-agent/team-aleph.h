@@ -9,6 +9,8 @@
 #include <stdbool.h>
 #include "agent.h"
 
+#define TURNS_FORAGING 300
+
 typedef enum grid_cell_e
 {
 	NO_INFO,
@@ -32,7 +34,8 @@ typedef enum grid_cell_e
     WALL_ALEPH,
 	WALL_ENEMY,
     HIVE_ALEPH,
-    HIVE_ENEMY
+    HIVE_ENEMY,
+	MARKED_FOR_EXPLORATION
 } grid_cell_t;
 
 static const coords_t stack_cells[] = {
@@ -81,7 +84,7 @@ typedef struct
 void	update_grid(agent_info_t info, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bees[NUM_BEES]);
 command_t	best_scout_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, int player);
-void	initialize_bees(t_bee bees[NUM_BEES], int player);
+void	initialize_bees(t_bee bees[NUM_BEES]);
 bool	is_aleph_bee_with_flower(grid_cell_t bee);
 int	distance_between_points(coords_t coord0, coords_t coord1);
 coords_t	hive_coords(int player);
@@ -100,5 +103,6 @@ coords_t	best_attack_target(int player, int index);
 bool	coords_equal(coords_t coords0, coords_t coords1);
 bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
 bool	enemy_bee_is_close(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
+command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info);
 
 #endif

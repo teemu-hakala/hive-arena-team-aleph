@@ -1,24 +1,24 @@
 #include "team-aleph.h"
 
-static const coords_t scout_targets[2][5] = {
-	{{3, 3},
-	{ 7, 7},
-	{12, 9},
-	{17, 7},
-	{21, 3}},
-	{{3, 26},
-	{ 7, 22},
-	{12, 20},
-	{17, 22},
-	{21, 26}}
-};
+// static const coords_t scout_targets[2][5] = {
+// 	{{3, 3},
+// 	{ 7, 7},
+// 	{12, 9},
+// 	{17, 7},
+// 	{21, 3}},
+// 	{{3, 26},
+// 	{ 7, 22},
+// 	{12, 20},
+// 	{17, 22},
+// 	{21, 26}}
+// };
 
-void	initialize_bees(t_bee bees[NUM_BEES], int player)
+void	initialize_bees(t_bee bees[NUM_BEES])
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
-		bees[b].role = WAYPOINT;
-		bees[b].target = scout_targets[player][b];
+		bees[b].role = FORAGER;
+		bees[b].target.row = -1;
 	}
 }
 

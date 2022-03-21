@@ -155,4 +155,12 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 			}
 		}
 	}
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			if (grid[row][col].cell == MARKED_FOR_EXPLORATION && grid[row][col].turn - info.turn == 10)
+				grid[row][col].cell = NO_INFO;
+		}
+	}
 }

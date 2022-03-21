@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builders.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jraivio <jraivio@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: nsamoilo <nsamoilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 17:28:30 by jraivio           #+#    #+#             */
-/*   Updated: 2022/03/21 20:18:54 by jraivio          ###   ########.fr       */
+/*   Updated: 2022/03/21 20:55:51 by nsamoilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static coords_t		get_target(int player, t_bees bees)
 			builder_count++;
 	target = hive_coords(player ? 0 : 1);
 	target.row += builder_offsets[builder_count - 1].row;
-	target.col += builder_offsets[builder_count - 1].col * player ? 1 : -1;
+	target.col += builder_offsets[builder_count - 1].col/* * (player ? 1 : -1)*/;
 	return (target);
 }
 
@@ -46,8 +46,8 @@ static command_t	get_best_move(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee be
 			temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
 			continue ;
 		temp_distance = distance_between_points(temp_coord, bee.target);
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && 
-			!is_grid_wall(grid[temp_coord.row][temp_coord.col].cell))
+		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH/* || 
+			is_grid_wall(grid[temp_coord.row][temp_coord.col].cell)*/)
 			continue ;
 		if (temp_distance < best_distance ||
 			(temp_distance == best_distance && 

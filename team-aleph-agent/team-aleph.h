@@ -33,6 +33,7 @@ typedef enum grid_cell_e
 	TARGET_FLOWER,
     WALL_ALEPH,
 	WALL_ENEMY,
+	WALL_TARGET,
     HIVE_ALEPH,
     HIVE_ENEMY,
 	MARKED_FOR_EXPLORATION
@@ -44,6 +45,14 @@ static const coords_t stack_cells[] = {
     { 1, 1},
     { 2, 0},
     { 2, 2},
+};
+
+static const coords_t builder_offsets[] = {
+	{1, 0},
+	{-1, 0},
+	{0, 1},
+	{1, 1},
+	{-1, 1},
 };
 
 typedef struct
@@ -104,5 +113,8 @@ bool	coords_equal(coords_t coords0, coords_t coords1);
 bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
 bool	enemy_bee_is_close(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
 command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info);
+command_t	best_builder_action(agent_info_t info, \
+			t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees);
+bool		is_grid_wall(grid_cell_t grid);
 
 #endif

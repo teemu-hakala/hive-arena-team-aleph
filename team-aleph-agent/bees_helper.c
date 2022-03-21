@@ -167,3 +167,8 @@ command_t	best_waypoint_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *be
 		best.action = GUARD;
 	return (best);
 }
+
+bool	is_grid_wall(grid_cell_t grid)
+{
+	return (grid == WALL_ALEPH || grid == WALL_ENEMY || grid == WALL_TARGET);
+}

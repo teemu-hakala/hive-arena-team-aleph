@@ -15,17 +15,14 @@
 
 void	initialize_bees(t_bee bees[NUM_BEES])
 {
-	int builder_index;
-
-	builder_index = 0;
 	for (int b = 0; b < NUM_BEES; b++)
 	{
-		 if (b % 2 == 1)
+		/*if (b % 2 == 1)
 		{
 			bees[b].role = BUILDER;
-			bees[b].builder_index = builder_index++;
+
 		}
-		else
+		else*/
 			bees[b].role = FORAGER;
 		bees[b].target.row = -1;
 	}

@@ -17,12 +17,9 @@ void	initialize_bees(t_bee bees[NUM_BEES])
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
-		/*if (b % 2 == 1)
-		{
-			bees[b].role = BUILDER;
-
-		}
-		else*/
+		if (b == 0)
+			bees[b].role = DEFENDER;
+		else
 			bees[b].role = FORAGER;
 		bees[b].target.row = -1;
 	}

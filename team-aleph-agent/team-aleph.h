@@ -10,7 +10,8 @@
 #include "agent.h"
 
 #define TURNS_FORAGING 200
-
+#define DEFENDER_FORAGE_TURNS 100
+#define FORAGER_BEE_INDEX 1
 typedef enum grid_cell_e
 {
 	NO_INFO,
@@ -71,7 +72,8 @@ typedef enum e_role
 	HIVE_FORAGER,
 	ATTACKER,
 	BUILDER,
-	WAYPOINT
+	WAYPOINT,
+	DEFENDER
 } t_role;
 typedef struct
 {
@@ -90,6 +92,8 @@ typedef struct
 	int		hive_foragers;
 	int		forage_distance;
 	int		hive_forage_distance;
+	coords_t	foraging_target;
+	int			guard_attempts;
 	coords_t	top_left_stack[2];
 }	t_bees;
 
@@ -119,5 +123,8 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 command_t	best_builder_action(agent_info_t info, \
 			t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees);
 bool		is_grid_wall(grid_cell_t grid);
+command_t	best_defender_action(agent_info_t info, \
+	t_cell_history grid[NUM_ROWS][NUM_COLS], \
+	t_bees *bees);
 
 #endif

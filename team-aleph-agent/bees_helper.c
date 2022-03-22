@@ -25,6 +25,33 @@ void	initialize_bees(t_bee bees[NUM_BEES])
 	}
 }
 
+dir_t	direction_from_coords(coords_t bee_coords, \
+	coords_t foraging_target_coords)
+{
+	int		row_diff;
+	int		col_diff;
+
+	row_diff = bee_coords.row - foraging_target_coords.row;
+	col_diff = bee_coords.col - foraging_target_coords.col;
+	if (row_diff == -1 && col_diff == 0)
+		return (N);
+	else if (row_diff == -1  && col_diff == 1)
+		return (NE);
+	else if (row_diff ==  0 && col_diff == 1)
+		return (E);
+	else if (row_diff ==  1 && col_diff == 1)
+		return (SE);
+	else if (row_diff == 1 && col_diff == 0)
+		return (S);
+	else if (row_diff == 1 && col_diff == -1)
+		return (SW);
+	else if (row_diff == 0 && col_diff == -1)
+		return (W);
+	else if (row_diff == -1 && col_diff == -1)
+		return (NW);
+	return (N);
+}
+
 int	distance_between_points(coords_t coord0, coords_t coord1)
 {
 	if (abs(coord0.row - coord1.row) > abs(coord0.col - coord1.col))

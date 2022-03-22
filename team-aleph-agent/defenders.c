@@ -11,6 +11,7 @@ coords_t	defender_target(int player)
 void	update_foraging_target(t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	t_bees *bees, int player)
 {
+	(void) grid;
 	if (player == 0)
 	{
 		bees->foraging_target.row = 14;
@@ -73,7 +74,7 @@ command_t	best_defender_action(agent_info_t info, \
 	int		flower_direction;
 
 	if (info.turn < DEFENDER_FORAGE_TURNS)
-		return (best_forage_route(info, grid, bees));
+		return (new_forage_route(grid, &bees->bees[info.bee], info));
 	bees->bees[info.bee].target = defender_target(info.player);
 	if (coords_equal(bees->bees[info.bee].coords, bees->bees[info.bee].target))
 	{
@@ -84,10 +85,10 @@ command_t	best_defender_action(agent_info_t info, \
 			else
 				return ((command_t) {.action = FORAGE, .direction = NE});
 		}
-		flower_direction = flower_in_reach(grid, bees->bees[info.bee].coords);
+		flower_direction = -1; //flower_in_reach(grid, bees->bees[info.bee].coords);
 		if (flower_direction >= 0)
 			return ((command_t) {.action = FORAGE, .direction = flower_direction});
-		update_heatmap(grid);
+		//update_heatmap(grid);
 		update_foraging_target(grid, bees, info.player);
 		if (distance_between_points(bees->bees[FORAGER_BEE_INDEX].coords, \
 			bees->foraging_target) == 1)
@@ -102,4 +103,5 @@ command_t	best_defender_action(agent_info_t info, \
 	{
 		return (best_waypoint_route_defender(grid, &bees->bees[info.bee]));
 	}
+	return ((command_t) {.action = FORAGE, .direction = N});
 }

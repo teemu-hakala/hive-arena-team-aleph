@@ -126,5 +126,7 @@ bool		is_grid_wall(grid_cell_t grid);
 command_t	best_defender_action(agent_info_t info, \
 	t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	t_bees *bees);
+dir_t	direction_from_coords(coords_t bee_coords, \
+	coords_t foraging_target_coords);
 
 #endif

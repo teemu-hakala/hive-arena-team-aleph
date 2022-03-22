@@ -102,7 +102,7 @@ command_t	best_defender_action(agent_info_t info, \
 	int		flower_direction;
 
 	if (info.turn < DEFENDER_FORAGE_TURNS)
-		return (new_forage_route(grid, &bees->bees[info.bee], info));
+		return (new_forage_route(grid, &bees->bees[info.bee], info, bees));
 	bees->bees[info.bee].target = defender_target(info.player);
 	if (coords_equal(bees->bees[info.bee].coords, bees->bees[info.bee].target))
 	{

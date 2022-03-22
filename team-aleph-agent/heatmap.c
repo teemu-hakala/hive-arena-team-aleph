@@ -7,7 +7,7 @@ void	print_heatmap(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees)
 		for (int col = 0; col < NUM_COLS; col++)
 		{
 			if (coords_equal((coords_t) {.row = row, .col = col}, bees->foraging_target))
-				printf(".");
+				printf(". ");
 			else
 				printf("%d ", grid[row][col].adjacents);
 			fflush(stdout);
@@ -15,7 +15,7 @@ void	print_heatmap(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees)
 		printf("\n");
 	}
 	printf("\n");
-	
+
 }
 
 int		can_move(grid_cell_t grid)

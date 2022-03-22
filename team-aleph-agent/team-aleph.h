@@ -11,6 +11,7 @@
 
 #define TURNS_FORAGING 200
 #define DEFENDER_FORAGE_TURNS 100
+#define DEFENDER_BEE_INDEX 0
 #define FORAGER_BEE_INDEX 1
 typedef enum grid_cell_e
 {
@@ -63,6 +64,7 @@ typedef struct
 	int			turn;
 	bool		is_stack;
 	bool		target_stack;
+	int			adjacents;
 } t_cell_history;
 
 typedef enum e_role
@@ -128,5 +130,7 @@ command_t	best_defender_action(agent_info_t info, \
 	t_bees *bees);
 dir_t	direction_from_coords(coords_t bee_coords, \
 	coords_t foraging_target_coords);
+void	update_heatmap(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees *bees);
+int		find_neighbour(grid_cell_t type, t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t location);
 
 #endif

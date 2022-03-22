@@ -202,3 +202,19 @@ bool	is_grid_wall(grid_cell_t grid)
 {
 	return (grid == WALL_ALEPH || grid == WALL_ENEMY || grid == WALL_TARGET);
 }
+
+int		find_neighbour(grid_cell_t type, t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t location)
+{
+	coords_t temp_coord;
+
+	for (int d = 0; d < 8; d++)
+	{
+		temp_coord = direction_to_coords(location, d);
+		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+			continue ;
+		if (grid[temp_coord.row][temp_coord.col].cell == type)
+			return (d);
+	}
+	return (-1);
+}

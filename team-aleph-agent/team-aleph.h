@@ -9,8 +9,8 @@
 #include <stdbool.h>
 #include "agent.h"
 
-#define TURNS_FORAGING 200
-#define DEFENDER_FORAGE_TURNS 100
+#define TURNS_FORAGING 0 // 200
+#define DEFENDER_FORAGE_TURNS 0 // 100
 #define DEFENDER_BEE_INDEX 0
 #define FORAGER_BEE_INDEX 1
 typedef enum grid_cell_e

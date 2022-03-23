@@ -28,8 +28,6 @@ void	update_foraging_target(t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	// 	bees->foraging_target.row = 14;
 	// 	bees->foraging_target.col = 27;
 	// }
-	best_forage_coord.row = -1;
-	best_forage_coord.col = -1;
 	best_adjacents = 10;
 	for (int d = 0; d < 8; d++)
 	{

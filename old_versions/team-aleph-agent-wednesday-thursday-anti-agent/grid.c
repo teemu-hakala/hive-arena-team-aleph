@@ -81,11 +81,11 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						break;
 					case BEE_0:
 						if (info.player == 0
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_0
+							/* && grid[temp_row][temp_col].cell != BEE_ALEPH_0
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4)
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4 */)
 						{
 							grid[temp_row][temp_col].cell = BEE_ALEPH;
 						} else
@@ -95,11 +95,11 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						break;
 					case BEE_1:
 						if (info.player == 1
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_0
+							/* && grid[temp_row][temp_col].cell != BEE_ALEPH_0
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4)
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4 */)
 						{
 							grid[temp_row][temp_col].cell = BEE_ALEPH;
 						} else
@@ -109,11 +109,11 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						break;
 					case BEE_0_WITH_FLOWER:
 						if (info.player == 0
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_0_WITH_FLOWER
+							/* && grid[temp_row][temp_col].cell != BEE_ALEPH_0_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3_WITH_FLOWER
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER)
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER */)
 						{
 							grid[temp_row][temp_col].cell = BEE_ALEPH_WITH_FLOWER;
 						} else
@@ -123,11 +123,11 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						break;
 					case BEE_1_WITH_FLOWER:
 						if (info.player == 1
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_0_WITH_FLOWER
+							/* && grid[temp_row][temp_col].cell != BEE_ALEPH_0_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_1_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_2_WITH_FLOWER
 							&& grid[temp_row][temp_col].cell != BEE_ALEPH_3_WITH_FLOWER
-							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER)
+							&& grid[temp_row][temp_col].cell != BEE_ALEPH_4_WITH_FLOWER */)
 						{
 							grid[temp_row][temp_col].cell = BEE_ALEPH_WITH_FLOWER;
 						} else
@@ -136,7 +136,8 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						}
 						break;
 					case FLOWER:
-						grid[temp_row][temp_col].cell = FLOWER_ALEPH;
+						if (grid[temp_row][temp_col].cell != TARGET_FLOWER)
+							grid[temp_row][temp_col].cell = FLOWER_ALEPH;
 						break;
 					case WALL:
 						if (grid[temp_row][temp_col].cell != WALL_ALEPH &&
@@ -165,7 +166,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 	{
 		for (int col = 0; col < NUM_COLS; col++)
 		{
-			if (grid[row][col].cell == MARKED_FOR_EXPLORATION && grid[row][col].turn - info.turn == 10)
+			if (grid[row][col].cell == MARKED_FOR_EXPLORATION /*&& grid[row][col].turn - info.turn > 10*/)
 				grid[row][col].cell = NO_INFO;
 		}
 	}

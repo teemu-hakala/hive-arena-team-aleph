@@ -25,7 +25,9 @@ command_t	best_waypoint_route_forager(t_cell_history grid[NUM_ROWS][NUM_COLS], t
 			// 	return ((command_t){.action = FORAGE, .direction = d});
 			return ((command_t){.action = FORAGE, .direction = d}); //Should take into account whether the forage target is a wall, and not assume a free cell / hive
 		}
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
+		if ((grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH
+			&& grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
+			|| grid[temp_coord.row][temp_coord.col].adjacents > 0)
 			continue ;
 		if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
 		{

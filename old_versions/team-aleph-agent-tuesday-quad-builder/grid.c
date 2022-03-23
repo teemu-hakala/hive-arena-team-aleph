@@ -139,7 +139,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 						grid[temp_row][temp_col].cell = FLOWER_ALEPH;
 						break;
 					case WALL:
-						if (grid[temp_row][temp_col].cell != WALL_ALEPH ||
+						if (grid[temp_row][temp_col].cell != WALL_ALEPH &&
 							grid[temp_row][temp_col].cell != WALL_TARGET)
 							grid[temp_row][temp_col].cell = WALL_ENEMY;
 						break;

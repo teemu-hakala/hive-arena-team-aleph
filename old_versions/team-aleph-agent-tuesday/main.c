@@ -14,7 +14,6 @@ command_t think(agent_info_t info)
 		create_stacks(grid, info.player, &bees);
 		bees.builders = 0;
 		bees.attackers = 0;
-		bees.foraging_target = (coords_t){.row = -1, .col = -1};
 	}
 
 //	bee_coords.row = info.row;
@@ -33,7 +32,7 @@ int main(int argc, char **argv)
 
     char *host = argv[1];
     int port = atoi(argv[2]);
-    char *team_name = "Team ALEPH";
+    char *team_name = "team_aleph_agent";
 
     agent_main(host, port, team_name, think);
 }

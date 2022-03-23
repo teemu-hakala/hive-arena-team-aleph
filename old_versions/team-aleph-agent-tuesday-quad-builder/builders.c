@@ -6,7 +6,7 @@
 /*   By: thakala <thakala@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 17:28:30 by jraivio           #+#    #+#             */
-/*   Updated: 2022/03/21 22:36:10 by thakala          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:06:30 by thakala          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static command_t	build_wall(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bee)
 		targets[d] = grid[temp_coords.row]
 						[temp_coords.col].cell;
 	}
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		for (int d = 0; d < 8; d++)
 		{

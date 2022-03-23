@@ -212,7 +212,7 @@ command_t best_attack_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee,
 				else if (!no_flowers_in_forage_area(grid, bees->forage_distance, NUM_COLS * info.player, info.player))
 				{
 					bee->role = FORAGER;
-					return (new_forage_route(grid, bee, info, bees));
+					return (new_forage_route(grid, bee, info));
 				}
 				else
 					return (best_scout_route(grid, &bees->bees[info.bee], info.player));

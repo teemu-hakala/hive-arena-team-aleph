@@ -20,7 +20,8 @@ command_t	best_waypoint_route_forager(t_cell_history grid[NUM_ROWS][NUM_COLS], t
 		temp_distance = distance_between_points(temp_coord, bee->target);
  		if (temp_distance == 0)
 		{
-			bee->target.row = -1;
+			if (!is_aleph_bee_with_flower(grid[bee->coords.row][bee->coords.col].cell))
+				bee->target.row = -1;
 			// if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
 			// 	return ((command_t){.action = FORAGE, .direction = d});
 			return ((command_t){.action = FORAGE, .direction = d}); //Should take into account whether the forage target is a wall, and not assume a free cell / hive
@@ -102,8 +103,8 @@ coords_t	find_explore_forage_target(t_cell_history grid[NUM_ROWS][NUM_COLS], age
 			if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
 				|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
 				continue ;
-			if (grid[temp_coord.row][temp_coord.col].cell == MARKED_FOR_EXPLORATION)
-				return (temp_coord);
+			/*if (grid[temp_coord.row][temp_coord.col].cell == MARKED_FOR_EXPLORATION)
+				return (temp_coord);*/
 /* 			temp_info = get_info_from_coord(temp_coord, grid);
 			if (temp_info > best_info)
 			{
@@ -173,9 +174,11 @@ command_t	best_explore_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_b
 
 command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info, t_bees *bees)
 {
-	if (bee->target.row >= 0)
+	if (bee->target.row >= 0/* && is_aleph_bee_with_flower(grid[info.row][info.col].cell)*/)
 	{
-		if (bees->foraging_target.row < 0 && is_aleph_bee_with_flower(grid[info.row][info.col].cell))
+		/*if (bees->foraging_target.row > 0 && !coords_equal(bee->target, bees->foraging_target))
+			bee->target = bees->foraging_target;*/
+		if (bees->foraging_target.row > 0 && is_aleph_bee_with_flower(grid[info.row][info.col].cell))
 			bee->target = bees->foraging_target;
 		return (best_waypoint_route_forager(grid, bee));
 	}
@@ -189,7 +192,10 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 				bee->target = bees->foraging_target;
 		}
 		else
+		{
+			bee->target.row = -1;
 			find_forage_flower(bee, grid, bees);
+		}
 		if (bee->target.row < 0)
 			return (best_explore_forage_route(grid, bee, info));
 		return (best_waypoint_route_forager(grid, bee));

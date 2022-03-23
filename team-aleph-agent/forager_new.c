@@ -113,6 +113,36 @@ void	find_forage_flower(t_bee *current_bee, \
 		grid[best.row][best.col].cell = TARGET_FLOWER;
 }
 
+void	find_last_forager_flower(t_bee *current_bee, \
+	t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees)
+{
+	coords_t	best;
+	int			best_distance;
+	int			temp_distance;
+
+	best_distance = NUM_COLS;
+	best.row = -1;
+	best.col = -1;
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			if ((grid[row][col].cell != FLOWER_ALEPH && grid[row][col].cell != TARGET_FLOWER) || distance_between_points(bees->foraging_target, (coords_t){.row = row, .col = col}) == 0)
+				continue ;
+			temp_distance = distance_between_points(current_bee->coords, (coords_t){.row = row, .col = col});
+			if (temp_distance < best_distance)
+			{
+				best_distance = temp_distance;
+				best.row = row;
+				best.col = col;
+			}
+		}
+	}
+	current_bee->target = best;
+	// if (best.row >= 0)
+	// 	grid[best.row][best.col].cell = TARGET_FLOWER;
+}
+
 coords_t	find_explore_forage_target(t_cell_history grid[NUM_ROWS][NUM_COLS], agent_info_t info)
 {
 	coords_t	temp_coord;
@@ -180,13 +210,13 @@ command_t	best_explore_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_b
 			continue ;
 
 		temp_distance = distance_between_points(temp_coord, temp_target);
- 		if (temp_distance == 0)
-		{
-			// if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
-			// 	return ((command_t){.action = FORAGE, .direction = d});
-			bee->target.row = -1;
-			return ((command_t){.action = FORAGE, .direction = d});
-		}
+ 		// if (temp_distance == 0)
+		// {
+		// 	// if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
+		// 	// 	return ((command_t){.action = FORAGE, .direction = d});
+		// 	bee->target.row = -1;
+		// 	return ((command_t){.action = FORAGE, .direction = d});
+		// }
 		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
 			continue ;
 		if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
@@ -227,7 +257,10 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 		else
 		{
 			bee->target.row = -1;
-			find_forage_flower(bee, grid, bees);
+			if (info.bee == 1)
+				find_last_forager_flower(bee, grid, bees);
+			else
+				find_forage_flower(bee, grid, bees);
 		}
 		if (bee->target.row < 0)
 			return (best_explore_forage_route(grid, bee, info));

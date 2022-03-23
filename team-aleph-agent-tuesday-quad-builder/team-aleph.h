@@ -10,9 +10,7 @@
 #include "agent.h"
 
 #define TURNS_FORAGING 200
-#define DEFENDER_FORAGE_TURNS 100
-#define DEFENDER_BEE_INDEX 0
-#define FORAGER_BEE_INDEX 1
+
 typedef enum grid_cell_e
 {
 	NO_INFO,
@@ -39,8 +37,7 @@ typedef enum grid_cell_e
 	WALL_TARGET,
     HIVE_ALEPH,
     HIVE_ENEMY,
-	MARKED_FOR_EXPLORATION,
-	NO_GO
+	MARKED_FOR_EXPLORATION
 } grid_cell_t;
 
 static const coords_t stack_cells[] = {
@@ -52,11 +49,11 @@ static const coords_t stack_cells[] = {
 };
 
 static const coords_t builder_offsets[] = {
-	{1, 0},
-	{-1, 0},
-	{0, 1},
-	{1, 1},
+	{2, 2},
+	{-1, -1},
+	{1, -1},
 	{-1, 1},
+	{8, 0},
 };
 
 typedef struct
@@ -65,8 +62,6 @@ typedef struct
 	int			turn;
 	bool		is_stack;
 	bool		target_stack;
-	int			adjacents;
-	int			pathing_layer_cell;
 } t_cell_history;
 
 typedef enum e_role
@@ -76,8 +71,7 @@ typedef enum e_role
 	HIVE_FORAGER,
 	ATTACKER,
 	BUILDER,
-	WAYPOINT,
-	DEFENDER
+	WAYPOINT
 } t_role;
 typedef struct
 {
@@ -96,8 +90,6 @@ typedef struct
 	int		hive_foragers;
 	int		forage_distance;
 	int		hive_forage_distance;
-	coords_t	foraging_target;
-	int			guard_attempts;
 	coords_t	top_left_stack[2];
 }	t_bees;
 
@@ -123,18 +115,9 @@ coords_t	best_attack_target(int player, int index);
 bool	coords_equal(coords_t coords0, coords_t coords1);
 bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
 bool	enemy_bee_is_close(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee);
-command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info, t_bees *bees);
+command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info);
 command_t	best_builder_action(agent_info_t info, \
 			t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees);
 bool		is_grid_wall(grid_cell_t grid);
-command_t	best_defender_action(agent_info_t info, \
-	t_cell_history grid[NUM_ROWS][NUM_COLS], \
-	t_bees *bees);
-dir_t	direction_from_coords(coords_t bee_coords, \
-	coords_t foraging_target_coords);
-void	update_heatmap(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees *bees);
-int		find_neighbour(grid_cell_t type, t_cell_history grid[NUM_ROWS][NUM_COLS], coords_t location);
-command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
-	agent_info_t info);
 
 #endif

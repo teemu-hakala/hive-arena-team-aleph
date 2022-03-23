@@ -243,7 +243,8 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 			bee->target = bees->foraging_target;*/
 		if (bees->foraging_target.row > 0 && is_aleph_bee_with_flower(grid[info.row][info.col].cell))
 			bee->target = bees->foraging_target;
-		return (best_waypoint_route_forager(grid, bee));
+		//return (best_waypoint_route_forager(grid, bee));
+		return (find_path(grid, bees, info));
 	}
 	else
 	{
@@ -264,6 +265,7 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 		}
 		if (bee->target.row < 0)
 			return (best_explore_forage_route(grid, bee, info));
-		return (best_waypoint_route_forager(grid, bee));
+		//return (best_waypoint_route_forager(grid, bee));
+		return (find_path(grid, bees, info));
 	}
 }

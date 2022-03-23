@@ -4,7 +4,7 @@ CPPFLAGS=-I../src
 LDFLAGS=-flto -L../bin -lagent
 
 OBJS=main.o grid.o scouts.o bees_helper.o forager_new.o bees.o attacker.o \
-	builders.o defenders.o heatmap.o pathfinding.o
+	builders.o
 NAME=agent
 
 all: $(NAME)

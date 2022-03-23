@@ -186,7 +186,7 @@ coords_t	find_explore_forage_target(t_cell_history grid[NUM_ROWS][NUM_COLS], age
 	}
 	grid[best.row][best.col].cell = MARKED_FOR_EXPLORATION;
 	grid[best.row][best.col].turn = info.turn;
-	print_grid(grid, info);
+	// print_grid(grid, info);
 	return (best);
 }
 

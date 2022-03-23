@@ -13,7 +13,10 @@ void	print_pathing_layer(t_cell_history grid[NUM_ROWS][NUM_COLS])
 	{
 		for (int col = 0; col < NUM_COLS; col++)
 		{
-			printf("% 2d", grid[row][col].pathing_layer_cell);
+			if (grid[row][col].pathing_layer_cell > 99)
+				printf(" # ");
+			else
+				printf("% 2d ", grid[row][col].pathing_layer_cell);
 			fflush(stdout);
 		}
 		printf("\n");
@@ -84,7 +87,7 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 
 	for (int row = 0; row < NUM_ROWS; row++)
 	{
-		for (int col = 0; col < NUM_ROWS; col++)
+		for (int col = 0; col < NUM_COLS; col++)
 		{
 			grid[row][col].pathing_layer_cell = PRISTINE_PATH_SQUARE;
 		}
@@ -159,8 +162,7 @@ bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int dept
 			continue ;
 		if (grid[temp_coord.row][temp_coord.col].pathing_layer_cell != PRISTINE_PATH_SQUARE)
 			continue ;
-		grid[temp_coord.row][temp_coord.col].pathing_layer_cell = \
-			grid[current_coord.row][current_coord.col].pathing_layer_cell \
+		grid[temp_coord.row][temp_coord.col].pathing_layer_cell = depth \
 			+ cell_cost(grid[temp_coord.row][temp_coord.col].cell, grid[temp_coord.row][temp_coord.col].adjacents);
 		if (coords_equal(temp_coord, bees->bees[info.bee].target))
 		{
@@ -185,13 +187,14 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 
 	for (int row = 0; row < NUM_ROWS; row++)
 	{
-		for (int col = 0; col < NUM_ROWS; col++)
+		for (int col = 0; col < NUM_COLS; col++)
 		{
 			grid[row][col].pathing_layer_cell = PRISTINE_PATH_SQUARE;
 		}
 	}
 	grid[bees->bees[info.bee].coords.row][bees->bees[info.bee].coords.col].pathing_layer_cell = 0;
-
+	// printf("pathing_layer after reset:\n\n");
+	// print_pathing_layer(grid);
 
 	depth = 0;
 	for (; depth < PRISTINE_PATH_SQUARE; depth++)
@@ -214,11 +217,13 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 		if (target_found)
 						break ;
 	}
+	// printf("pathing_layer after finding target:\n\n");
+	// print_pathing_layer(grid);
 	best_coord.row = bees->bees[info.bee].target.row;
 	best_coord.col = bees->bees[info.bee].target.col;
 	prev_coord.row = bees->bees[info.bee].target.row;
 	prev_coord.col = bees->bees[info.bee].target.col;
-	for (; depth > 0; )
+	for (depth = grid[best_coord.row][best_coord.col].pathing_layer_cell; depth > 0; )
 	{
 		best_depth = depth;
 		for (int d = 0; d < 8; d++)
@@ -243,6 +248,8 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 		if (temp_depth == 0)
 				break ;
 	}
+	// printf("pathing_layer after retracing our steps:\n\n");
+	// print_pathing_layer(grid);
 	best_command.direction = direction_from_coords(bees->bees[info.bee].coords, best_coord);
 	if (is_grid_wall(grid[best_coord.row][best_coord.col].cell))
 		best_command.action = GUARD;

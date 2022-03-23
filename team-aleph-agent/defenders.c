@@ -116,7 +116,7 @@ command_t	best_defender_action(agent_info_t info, \
 		flower_direction = find_neighbour(FLOWER_ALEPH, grid, bees->bees[info.bee].coords);
 		if (flower_direction >= 0)
 			return ((command_t) {.action = FORAGE, .direction = flower_direction});
-		printf("player %d turn %d\n\n", info.player, info.turn);
+		//printf("player %d turn %d\n\n", info.player, info.turn);
 		update_heatmap(grid, info.player, bees);
 		if (distance_between_points(bees->bees[FORAGER_BEE_INDEX].coords, \
 			bees->foraging_target) == 1)

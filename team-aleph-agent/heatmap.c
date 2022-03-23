@@ -57,6 +57,8 @@ void	update_heatmap(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees 
 				grid[row][col].adjacents = 5;
 		}
 	}
-	if (player == 0)
-		print_heatmap(grid, bees);
+	(void) player;
+	(void) bees;
+	//if (player == 0)
+		//print_heatmap(grid, bees);
 }

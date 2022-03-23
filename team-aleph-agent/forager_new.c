@@ -1,5 +1,37 @@
 #include "team-aleph.h"
 
+void	print_grid(t_cell_history grid[NUM_ROWS][NUM_COLS], agent_info_t info)
+{
+	printf("player %d turn %d\n\n", info.player, info.turn);
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			switch (grid[row][col].cell)
+			{
+				case NO_INFO:
+					printf(". ");
+					break ;
+				case MARKED_FOR_EXPLORATION:
+					printf("* ");
+					break ;
+				case FLOWER_ALEPH:
+					printf("f ");
+					break ;
+				case TARGET_FLOWER:
+					printf("F ");
+					break ;
+				default:
+					printf("# ");
+					break ;
+			}
+			fflush(stdout);
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+
 command_t	best_waypoint_route_forager(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee)
 {
 	coords_t	temp_coord;
@@ -124,6 +156,7 @@ coords_t	find_explore_forage_target(t_cell_history grid[NUM_ROWS][NUM_COLS], age
 	}
 	grid[best.row][best.col].cell = MARKED_FOR_EXPLORATION;
 	grid[best.row][best.col].turn = info.turn;
+	print_grid(grid, info);
 	return (best);
 }
 

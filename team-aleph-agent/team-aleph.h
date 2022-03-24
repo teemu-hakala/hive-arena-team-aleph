@@ -54,7 +54,7 @@ static const coords_t stack_cells[] = {
 static const coords_t builder_offsets[] = {
 	{1, 0},
 	{-1, 0},
-	{0, 1},
+	{0, 1},//{1, 1},
 	{1, 1},
 	{-1, 1},
 };

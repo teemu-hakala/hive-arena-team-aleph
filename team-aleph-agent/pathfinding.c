@@ -137,11 +137,12 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 	return (best_command);
 }*/
 
-int	cell_cost(grid_cell_t cell, int heat_level)
+int	cell_cost(grid_cell_t cell, int heat_level, int bee)
 {
+	(void) bee;
 	if (is_grid_wall(cell) && heat_level == 0)
 		return (PATH_COST_WALL_UNDEFENDED);
-	else if (cell == EMPTY_ALEPH || cell == EMPTY_TARGET)
+	else if (cell == EMPTY_ALEPH || cell == EMPTY_TARGET || (bee != DEFENDER_BEE_INDEX && bee != FORAGER_BEE_INDEX && cell == NO_INFO))
 		return (PATH_COST_EMPTY);
 	else
 		return (PRISTINE_PATH_SQUARE / 2);
@@ -163,7 +164,7 @@ bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int dept
 		if (grid[temp_coord.row][temp_coord.col].pathing_layer_cell != PRISTINE_PATH_SQUARE)
 			continue ;
 		grid[temp_coord.row][temp_coord.col].pathing_layer_cell = depth \
-			+ cell_cost(grid[temp_coord.row][temp_coord.col].cell, grid[temp_coord.row][temp_coord.col].adjacents);
+			+ cell_cost(grid[temp_coord.row][temp_coord.col].cell, grid[temp_coord.row][temp_coord.col].adjacents, info.bee);
 		if (coords_equal(temp_coord, bees->bees[info.bee].target))
 		{
 			target_found = true;

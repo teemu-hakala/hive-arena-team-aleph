@@ -259,7 +259,7 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 		else
 		{
 			bee->target.row = -1;
-			if (info.bee == 1)
+			if (info.bee == FORAGER_BEE_INDEX)
 				find_last_forager_flower(bee, grid, bees);
 			else
 				find_forage_flower(bee, grid, bees);

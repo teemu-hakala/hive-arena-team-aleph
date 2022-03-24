@@ -17,7 +17,7 @@ void	initialize_bees(t_bee bees[NUM_BEES])
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
-		if (b == 0)
+		if (b == DEFENDER_BEE_INDEX)
 			bees[b].role = DEFENDER;
 		else
 			bees[b].role = FORAGER;

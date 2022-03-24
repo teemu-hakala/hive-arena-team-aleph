@@ -174,7 +174,7 @@ bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int dept
 }
 
 command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
-	agent_info_t info)
+	agent_info_t info, coords_t	target)
 {
 	command_t	best_command;
 	bool		target_found;
@@ -219,10 +219,10 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 	}
 	// printf("pathing_layer after finding target:\n\n");
 	// print_pathing_layer(grid);
-	best_coord.row = bees->bees[info.bee].target.row;
-	best_coord.col = bees->bees[info.bee].target.col;
-	prev_coord.row = bees->bees[info.bee].target.row;
-	prev_coord.col = bees->bees[info.bee].target.col;
+	best_coord.row = target.row;
+	best_coord.col = target.col;
+	prev_coord.row = target.row;
+	prev_coord.col = target.col;
 	for (depth = grid[best_coord.row][best_coord.col].pathing_layer_cell; depth > 0; )
 	{
 		best_depth = depth;
@@ -253,7 +253,7 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 	best_command.direction = direction_from_coords(bees->bees[info.bee].coords, best_coord);
 	if (is_grid_wall(grid[best_coord.row][best_coord.col].cell))
 		best_command.action = GUARD;
-	else if (coords_equal(best_coord, bees->bees[info.bee].target))
+	else if (coords_equal(best_coord, target))
 		best_command.action = FORAGE;
 	else
 		best_command.action = MOVE;

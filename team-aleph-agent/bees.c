@@ -19,13 +19,11 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 			}
 			else
 				return (new_forage_route(grid, &bees->bees[info.bee], info, bees));
-		case ATTACKER:
-			return (best_attack_route(grid, &bees->bees[info.bee], info, bees));
 		case BUILDER:
 			return (best_builder_action(info, grid, bees));
 		case DEFENDER:
 			return (best_defender_action(info, grid, bees));
 		default:
-			return (best_scout_route(grid, &bees->bees[info.bee], info.player));
+			return (new_forage_route(grid, &bees->bees[info.bee], info, bees));
 	}
 }

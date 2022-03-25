@@ -1,135 +1,38 @@
 #include "team-aleph.h"
 
-void	find_flower_in_forage_distance(t_bee *current_bee, int forage_distance, \
-	t_cell_history grid[NUM_ROWS][NUM_COLS], int player)
+void	print_grid(t_cell_history grid[NUM_ROWS][NUM_COLS], agent_info_t info)
 {
-	coords_t	best;
-	int			best_distance;
-	int			temp_distance;
-	int			iteration_step;
-
-	best.row = -1;
-	best.col = -1;
-	best_distance = NUM_COLS;
-	iteration_step = -1 + 2 * player;
-	for (int col = forage_distance; col >= 0 && col < NUM_COLS; col += iteration_step)
+	printf("player %d turn %d\n\n", info.player, info.turn);
+	for (int row = 0; row < NUM_ROWS; row++)
 	{
-		// printf("iterstep %d col %d\n", iteration_step, col);
-		for (int row = 0; row < NUM_ROWS; row++)
+		for (int col = 0; col < NUM_COLS; col++)
 		{
-			if (grid[row][col].cell != FLOWER_ALEPH)
-				continue ;
-			temp_distance = distance_between_points((coords_t){.row = row, .col = col}, current_bee->coords);
-			if (temp_distance < best_distance)
+			switch (grid[row][col].cell)
 			{
-				best_distance = temp_distance;
-				best.row = row;
-				best.col = col;
+				case NO_INFO:
+					printf(". ");
+					break ;
+				case MARKED_FOR_EXPLORATION:
+					printf("* ");
+					break ;
+				case FLOWER_ALEPH:
+					printf("f ");
+					break ;
+				case TARGET_FLOWER:
+					printf("F ");
+					break ;
+				default:
+					printf("# ");
+					break ;
 			}
+			fflush(stdout);
 		}
-		if (best.col == col)
-		{
-			current_bee->target = best;
-			grid[best.row][best.col].cell = TARGET_FLOWER;
-			return ;
-		}
+		printf("\n");
 	}
+	printf("\n");
 }
 
-void	find_flower(t_bee *current_bee, int forage_distance, \
-	t_cell_history grid[NUM_ROWS][NUM_COLS], int player, int hive_forage_distance)
-{
-	// if (enemy_bee_is_close_and_adjacent_flower(grid, current_bee))
-	// {
-	// 	return ;
-	// }
-	switch (current_bee->role)
-	{
-		case FORAGER:
-			find_flower_in_forage_distance(current_bee, forage_distance, \
-				grid, player);
-			break ;
-		case HIVE_FORAGER:
-			find_flower_in_forage_distance(current_bee, hive_forage_distance, \
-				grid, player);
-			break ;
-		default:
-			break ;
-	}
-}
-
-coords_t find_stack_cell(agent_info_t info, t_bee bee, t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees bees)
-{
-	coords_t	best_cell;
-	coords_t	temp_cell;
-	int			best_distance;
-	int			temp_distance;
-
-	best_cell.row = -1;
-	best_distance = NUM_COLS;
-	for (int idx = 0; idx < 2; idx++)
-	{
-		for (int s = 0; s < 5; s++)
-		{
-			temp_cell.row = bees.top_left_stack[idx].row + stack_cells[s].row;
-			temp_cell.col = bees.top_left_stack[idx].col + stack_cells[s].col;
-			if (grid[temp_cell.row][temp_cell.col].cell != EMPTY_ALEPH || grid[temp_cell.row][temp_cell.col].target_stack)
-				continue;
-			temp_distance = distance_between_points(bee.coords,	temp_cell);
-			if (temp_distance < best_distance)
-			{
-				best_cell = temp_cell;
-				best_distance = temp_distance;
-			}
-		}
-	}
-	if (best_cell.row < 0)
-		return (hive_coords(info.player));
-	grid[best_cell.row][best_cell.col].target_stack = true;
-	return (best_cell);
-}
-
-coords_t	target_for_flower(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees)
-{
-	// (void) grid;
-	// (void) bees;
-	// return (hive_coords(info.player));
-	switch(bees->bees[info.bee].role)
-	{
-		case HIVE_FORAGER:
-			return (hive_coords(info.player));
-		case FORAGER:
-			if (enemy_bee_is_close(grid, &bees->bees[info.bee]))
-				return (hive_coords(info.player));
-			return(find_stack_cell(info, bees->bees[info.bee], grid, *bees));
-		default:
-			return (hive_coords(info.player));
-	}
-}
-
-bool	target_is_invalid(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_bee, agent_info_t info)
-{
-	if (grid[current_bee->target.row][current_bee->target.col].cell != TARGET_FLOWER \
-		&& !is_aleph_bee_with_flower(grid[info.row][info.col].cell))
-	{
-		current_bee->target.row = -1;
-		return (true);
-	}
-	else if (grid[current_bee->target.row][current_bee->target.col].cell != TARGET_FLOWER \
-		&& !coords_equal(hive_coords(info.player), current_bee->target) \
-		&& distance_between_points(current_bee->coords, current_bee->target) < 2
-		&& enemy_bee_is_close(grid, current_bee))
-	{
-		grid[current_bee->target.row][current_bee->target.col].target_stack = false;
-		current_bee->target = hive_coords(info.player);
-		return (true);
-	}
-	return (false);
-}
-
-command_t	best_forage_route(agent_info_t info, \
-	t_cell_history grid[NUM_ROWS][NUM_COLS], \
-	t_bees *bees)
+command_t	best_waypoint_route_forager(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee)
 {
 	coords_t	temp_coord;
 	command_t	best;
@@ -137,48 +40,27 @@ command_t	best_forage_route(agent_info_t info, \
 	int			temp_distance;
 	bool		is_wall;
 
-	is_wall = false;
-	if (bees->bees[info.bee].target.row < 0 || target_is_invalid(grid, &bees->bees[info.bee], info))
-	{
-		if (bees->bees[info.bee].target.row < 0)
-		{
-			if (is_aleph_bee_with_flower(grid[info.row][info.col].cell))
-				bees->bees[info.bee].target = target_for_flower(info, grid, bees);
-			else
-				find_flower(&bees->bees[info.bee], bees->forage_distance, \
-					grid, info.player, bees->hive_forage_distance);
-		}
-		// printf("player %d turn %d bee %d target %d %d cell %d\n", info.player, info.turn, info.bee, bees->bees[info.bee].target.row,
-		// bees->bees[info.bee].target.col, grid[bees->bees[info.bee].target.row][bees->bees[info.bee].target.col].cell);
-	}
-	// printf("%d %d\n", bees->bees[info.bee].target.row, bees->bees[info.bee].target.col);
-	if (bees->bees[info.bee].target.row < 0)
-	{
-		if (!no_flowers_in_forage_area(grid, 0, NUM_COLS, info.player))
-		{
-			bees->bees[info.bee].role = ATTACKER;
-			return (best_attack_route(grid, &bees->bees[info.bee], info, bees));
-		}
-		else
-			return (best_scout_route(grid, &bees->bees[info.bee], info.player));
-	}
 	best_distance = NUM_COLS;
+	is_wall = false;
 	for (int d = 0; d < 8; d++)
 	{
-		temp_coord = direction_to_coords(bees->bees[info.bee].coords, d);
+		temp_coord = direction_to_coords(bee->coords, d);
 		if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
 			|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
 			continue ;
-		temp_distance = distance_between_points(temp_coord, bees->bees[info.bee].target);
-		// printf("dir %d dist %d\n", d, temp_distance);
-		if (temp_distance == 0)
+
+		temp_distance = distance_between_points(temp_coord, bee->target);
+ 		if (temp_distance == 0)
 		{
-			bees->bees[info.bee].target.row = -1;
-			if (grid[temp_coord.row][temp_coord.col].target_stack)
-				grid[temp_coord.row][temp_coord.col].target_stack = false;
-			return ((command_t){.action = FORAGE, .direction = d});
+			if (!is_aleph_bee_with_flower(grid[bee->coords.row][bee->coords.col].cell))
+				bee->target.row = -1;
+			// if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
+			// 	return ((command_t){.action = FORAGE, .direction = d});
+			return ((command_t){.action = FORAGE, .direction = d}); //Should take into account whether the forage target is a wall, and not assume a free cell / hive
 		}
-		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
+		if ((grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH
+			&& grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
+			|| grid[temp_coord.row][temp_coord.col].adjacents > 0)
 			continue ;
 		if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
 		{
@@ -193,5 +75,198 @@ command_t	best_forage_route(agent_info_t info, \
 	}
 	if (is_wall)
 		best.action = GUARD;
+/* 	else if (best_distance == 0)
+	{
+		bee->target.row = -1;
+		best.action = FORAGE;
+	} */
 	return (best);
+}
+
+void	find_forage_flower(t_bee *current_bee, \
+	t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees)
+{
+	coords_t	best;
+	int			best_distance;
+	int			temp_distance;
+
+	best_distance = NUM_COLS;
+	best.row = -1;
+	best.col = -1;
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			if (grid[row][col].cell != FLOWER_ALEPH || distance_between_points(bees->foraging_target, (coords_t){.row = row, .col = col}) == 0)
+				continue ;
+			temp_distance = distance_between_points(current_bee->coords, (coords_t){.row = row, .col = col});
+			if (temp_distance < best_distance)
+			{
+				best_distance = temp_distance;
+				best.row = row;
+				best.col = col;
+			}
+		}
+	}
+	current_bee->target = best;
+	if (best.row >= 0)
+		grid[best.row][best.col].cell = TARGET_FLOWER;
+}
+
+void	find_last_forager_flower(t_bee *current_bee, \
+	t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees)
+{
+	coords_t	best;
+	int			best_distance;
+	int			temp_distance;
+
+	best_distance = NUM_COLS;
+	best.row = -1;
+	best.col = -1;
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			if ((grid[row][col].cell != FLOWER_ALEPH && grid[row][col].cell != TARGET_FLOWER) || distance_between_points(bees->foraging_target, (coords_t){.row = row, .col = col}) == 0)
+				continue ;
+			temp_distance = distance_between_points(current_bee->coords, (coords_t){.row = row, .col = col});
+			if (temp_distance < best_distance)
+			{
+				best_distance = temp_distance;
+				best.row = row;
+				best.col = col;
+			}
+		}
+	}
+	current_bee->target = best;
+	// if (best.row >= 0)
+	// 	grid[best.row][best.col].cell = TARGET_FLOWER;
+}
+
+coords_t	find_explore_forage_target(t_cell_history grid[NUM_ROWS][NUM_COLS], agent_info_t info)
+{
+	coords_t	temp_coord;
+	//int			best_info;
+	//int			temp_info;
+	int			best_distance;
+	int			temp_distance;
+	coords_t	best;
+
+	// best_info = 0;
+	best.row = 0;
+	best.col = 0;
+	best_distance = NUM_COLS;
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			temp_coord.row = row;
+			temp_coord.col = col;
+			if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+				|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+				continue ;
+			/*if (grid[temp_coord.row][temp_coord.col].cell == MARKED_FOR_EXPLORATION)
+				return (temp_coord);*/
+/* 			temp_info = get_info_from_coord(temp_coord, grid);
+			if (temp_info > best_info)
+			{
+				best_info = temp_info;
+				best = temp_coord;
+			} */
+			if (grid[temp_coord.row][temp_coord.col].cell == NO_INFO)
+			{
+				temp_distance = distance_between_points(temp_coord, (coords_t) {.row = info.row, .col = info.col});
+				if (temp_distance < best_distance)
+				{
+					best_distance = temp_distance;
+					best = temp_coord;
+				}
+			}
+		}
+	}
+	grid[best.row][best.col].cell = MARKED_FOR_EXPLORATION;
+	grid[best.row][best.col].turn = info.turn;
+	// print_grid(grid, info);
+	return (best);
+}
+
+command_t	best_explore_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, agent_info_t info)
+{
+	// coords_t	temp_coord;
+	// command_t	best;
+	// int			best_distance;
+	// int			temp_distance;
+	// bool		is_wall;
+	coords_t	temp_target;
+
+	temp_target = find_explore_forage_target(grid, info);
+	return (find_path(grid, bees, info, temp_target));
+	// best_distance = NUM_COLS;
+	// is_wall = false;
+	// for (int d = 0; d < 8; d++)
+	// {
+	// 	temp_coord = direction_to_coords(bee->coords, d);
+	// 	if (temp_coord.row < 0 || temp_coord.row >= NUM_ROWS
+	// 		|| temp_coord.col < 0 || temp_coord.col >= NUM_COLS)
+	// 		continue ;
+
+	// 	temp_distance = distance_between_points(temp_coord, temp_target);
+ 	// 	// if (temp_distance == 0)
+	// 	// {
+	// 	// 	// if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
+	// 	// 	// 	return ((command_t){.action = FORAGE, .direction = d});
+	// 	// 	bee->target.row = -1;
+	// 	// 	return ((command_t){.action = FORAGE, .direction = d});
+	// 	// }
+	// 	if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
+	// 		continue ;
+	// 	if (temp_distance < best_distance || (temp_distance == best_distance && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY && is_wall))
+	// 	{
+	// 		best_distance = temp_distance;
+	// 		best.action = MOVE;
+	// 		best.direction = d;
+	// 		if (grid[temp_coord.row][temp_coord.col].cell == WALL_ENEMY)
+	// 			is_wall = true;
+	// 		else
+	// 			is_wall = false;
+	// 	}
+	// }
+	// if (is_wall)
+	// 	best.action = GUARD;
+	// return (best);
+}
+
+command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, agent_info_t info, t_bees *bees)
+{
+	if (bee->target.row >= 0/* && is_aleph_bee_with_flower(grid[info.row][info.col].cell)*/)
+	{
+		/*if (bees->foraging_target.row > 0 && !coords_equal(bee->target, bees->foraging_target))
+			bee->target = bees->foraging_target;*/
+		if (bees->foraging_target.row > 0 && is_aleph_bee_with_flower(grid[info.row][info.col].cell))
+			bee->target = bees->foraging_target;
+		//return (best_waypoint_route_forager(grid, bee));
+		return (find_path(grid, bees, info, bees->bees[info.bee].target));
+	}
+	else
+	{
+		if (is_aleph_bee_with_flower(grid[info.row][info.col].cell))
+		{
+			if (bees->foraging_target.row < 0)
+				bee->target = hive_coords(info.player);
+			else
+				bee->target = bees->foraging_target;
+		}
+		else
+		{
+			bee->target.row = -1;
+			if (info.bee == FORAGER_BEE_INDEX)
+				find_last_forager_flower(bee, grid, bees);
+			else
+				find_forage_flower(bee, grid, bees);
+		}
+		if (bee->target.row < 0)
+			return (best_explore_forage_route(grid, bees, info));
+		//return (best_waypoint_route_forager(grid, bee));
+		return (find_path(grid, bees, info, bees->bees[info.bee].target));
+	}
 }

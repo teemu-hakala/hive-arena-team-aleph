@@ -6,7 +6,7 @@
 /*   By: nsamoilo <nsamoilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 17:28:30 by jraivio           #+#    #+#             */
-/*   Updated: 2022/03/25 10:55:19 by nsamoilo         ###   ########.fr       */
+/*   Updated: 2022/03/24 17:59:29 by nsamoilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static command_t	get_best_move(t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	// 	}
 	// }
 	// if (is_wall)
-	best = find_path(grid, bees->bees[info.bee], info, bees->bees[info.bee].target);
+	best = find_path(grid, bees, info, bees->bees[info.bee].target);
 	temp_coord = direction_to_coords(bees->bees[info.bee].coords, best.direction);
 	if (is_grid_wall(grid[temp_coord.row][temp_coord.col].cell))
 	{

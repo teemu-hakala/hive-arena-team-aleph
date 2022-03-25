@@ -200,7 +200,7 @@ command_t	best_explore_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_b
 	coords_t	temp_target;
 
 	temp_target = find_explore_forage_target(grid, info);
-	return (find_path(grid, bees->bees[info.bee], info, temp_target));
+	return (find_path(grid, bees, info, temp_target));
 	// best_distance = NUM_COLS;
 	// is_wall = false;
 	// for (int d = 0; d < 8; d++)
@@ -245,7 +245,7 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 		if (bees->foraging_target.row > 0 && is_aleph_bee_with_flower(grid[info.row][info.col].cell))
 			bee->target = bees->foraging_target;
 		//return (best_waypoint_route_forager(grid, bee));
-		return (find_path(grid, bees->bees[info.bee], info, bees->bees[info.bee].target));
+		return (find_path(grid, bees, info, bees->bees[info.bee].target));
 	}
 	else
 	{
@@ -267,6 +267,6 @@ command_t new_forage_route(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *bee, 
 		if (bee->target.row < 0)
 			return (best_explore_forage_route(grid, bees, info));
 		//return (best_waypoint_route_forager(grid, bee));
-		return (find_path(grid, bees->bees[info.bee], info, bees->bees[info.bee].target));
+		return (find_path(grid, bees, info, bees->bees[info.bee].target));
 	}
 }

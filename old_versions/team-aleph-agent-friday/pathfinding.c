@@ -148,7 +148,7 @@ int	cell_cost(grid_cell_t cell, int heat_level, int bee)
 		return (PRISTINE_PATH_SQUARE / 2);
 }
 
-bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int depth, t_bee bee, \
+bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int depth, t_bees *bees, \
 	agent_info_t info, coords_t current_coord)
 {
 	coords_t	temp_coord;
@@ -165,7 +165,7 @@ bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int dept
 			continue ;
 		grid[temp_coord.row][temp_coord.col].pathing_layer_cell = depth \
 			+ cell_cost(grid[temp_coord.row][temp_coord.col].cell, grid[temp_coord.row][temp_coord.col].adjacents, info.bee);
-		if (coords_equal(temp_coord, bee.target))
+		if (coords_equal(temp_coord, bees->bees[info.bee].target))
 		{
 			target_found = true;
 			break ;
@@ -174,7 +174,7 @@ bool	set_adjacent_cells_levels(t_cell_history grid[NUM_ROWS][NUM_COLS], int dept
 	return (target_found);
 }
 
-command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bee, \
+command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bees *bees, \
 	agent_info_t info, coords_t	target)
 {
 	command_t	best_command;
@@ -193,7 +193,7 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bee, \
 			grid[row][col].pathing_layer_cell = PRISTINE_PATH_SQUARE;
 		}
 	}
-	grid[bee.coords.row][bee.coords.col].pathing_layer_cell = 0;
+	grid[bees->bees[info.bee].coords.row][bees->bees[info.bee].coords.col].pathing_layer_cell = 0;
 	// printf("pathing_layer after reset:\n\n");
 	// print_pathing_layer(grid);
 
@@ -206,7 +206,7 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bee, \
 			{
 				if (grid[row][col].pathing_layer_cell == depth)
 				{
-					target_found = set_adjacent_cells_levels(grid, depth, bee, info, \
+					target_found = set_adjacent_cells_levels(grid, depth, bees, info, \
 						(coords_t) {.row = row, .col = col});
 					if (target_found)
 						break ;
@@ -251,7 +251,7 @@ command_t	find_path(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee bee, \
 	}
 	// printf("pathing_layer after retracing our steps:\n\n");
 	// print_pathing_layer(grid);
-	best_command.direction = direction_from_coords(bee.coords, best_coord);
+	best_command.direction = direction_from_coords(bees->bees[info.bee].coords, best_coord);
 	if (is_grid_wall(grid[best_coord.row][best_coord.col].cell))
 		best_command.action = GUARD;
 	else if (coords_equal(best_coord, target))

@@ -1,14 +1,19 @@
 #include "team-aleph.h"
 
-void	initialize_bees(t_bee bees[NUM_BEES])
+void	initialize_bees(t_bees *bees)
 {
 	for (int b = 0; b < NUM_BEES; b++)
 	{
 		if (b == DEFENDER_BEE_INDEX)
-			bees[b].role = DEFENDER;
+			bees->bees[b].role = DEFENDER;
+		else if (b == FORAGER_BEE_INDEX)
+			bees->bees[b].role = FORAGER;
 		else
-			bees[b].role = FORAGER;
-		bees[b].target.row = -1;
+		{
+			bees->bees[b].role = BUILDER;
+			bees->bees[b].builder_index = bees->builders++;
+		}
+		bees->bees[b].target.row = -1;
 	}
 }
 
@@ -49,7 +54,7 @@ int	distance_between_points(coords_t coord0, coords_t coord1)
 
 bool	is_aleph_bee_with_flower(grid_cell_t bee)
 {
-	return (bee >= BEE_ALEPH_WITH_FLOWER && bee <= BEE_ALEPH_4_WITH_FLOWER);
+	return (bee == BEE_ALEPH_WITH_FLOWER);
 }
 
 coords_t	hive_coords(int player)

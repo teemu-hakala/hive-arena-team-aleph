@@ -1,7 +1,6 @@
 #include "team-aleph.h"
 
 #define PRISTINE_PATH_SQUARE 4200
-#define INFINITY 88
 #define PATH_COST_EMPTY 1
 #define PATH_COST_WALL_UNDEFENDED 3
 

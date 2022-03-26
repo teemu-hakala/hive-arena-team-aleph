@@ -7,9 +7,8 @@ command_t think(agent_info_t info)
 
 	if (info.turn == 0 || info.turn == 1)
 	{
-		initialize_bees(bees.bees);
+		initialize_bees(&bees);
 		bees.builders = 0;
-		bees.attackers = 0;
 		bees.foraging_target = (coords_t){.row = -1, .col = -1};
 	}
 

@@ -8,26 +8,7 @@ void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 
 	bees[info.bee].coords.row = info.row;
 	bees[info.bee].coords.col = info.col;
-	switch(info.bee) {
-		case 0:
-
-			grid[info.row][info.col].cell = BEE_ALEPH_0;
-			break;
-		case 1:
-			grid[info.row][info.col].cell = BEE_ALEPH_1;
-			break;
-		case 2:
-			grid[info.row][info.col].cell = BEE_ALEPH_2;
-			break;
-		case 3:
-			grid[info.row][info.col].cell = BEE_ALEPH_3;
-			break;
-		case 4:
-			grid[info.row][info.col].cell = BEE_ALEPH_4;
-			break;
-		default:
-			break;
-	}
+	grid[info.row][info.col].cell = BEE_ALEPH;
 
 	for (int row = 0; row < VIEW_SIZE; row++)
 	{

@@ -1,34 +1,5 @@
 #include "team-aleph.h"
 
-void	initialize_stack(coords_t top_left, t_cell_history grid[NUM_ROWS][NUM_COLS])
-{
-	for(int i = 0; i < 5; i++)
-	{
-		grid[top_left.row + stack_cells[i].row][top_left.col + stack_cells[i].col].is_stack = true;
-	}
-}
-
-void	create_stacks(t_cell_history grid[NUM_ROWS][NUM_COLS], int player, t_bees *bees)
-{
-	int col;
-	int row1;
-	int row2;
-
-	row1 = 7;
-	row2 = 15;
-	if (player == 0)
-		col = 4;
-	else
-		col = 23;
-
-	initialize_stack((coords_t) {.row = row1, .col = col}, grid);
-	initialize_stack((coords_t) {.row = row2, .col = col}, grid);
-	bees->top_left_stack[0].row = row1;
-	bees->top_left_stack[1].row = row2;
-	bees->top_left_stack[0].col = col;
-	bees->top_left_stack[1].col = col;
-}
-
 void	update_grid(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COLS],\
 	t_bee bees[NUM_BEES])
 {

@@ -7,10 +7,7 @@ command_t think(agent_info_t info)
 
 	if (info.turn == 0 || info.turn == 1)
 	{
-		bees.forage_distance = get_forage_distance(info.player);
-		bees.hive_forage_distance = get_hive_forage_distance(info.player);
 		initialize_bees(bees.bees);
-		create_stacks(grid, info.player, &bees);
 		bees.builders = 0;
 		bees.attackers = 0;
 		bees.foraging_target = (coords_t){.row = -1, .col = -1};

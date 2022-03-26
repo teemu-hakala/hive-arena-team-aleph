@@ -13,8 +13,6 @@ command_t	choose_action(agent_info_t info, t_cell_history grid[NUM_ROWS][NUM_COL
 					bees->bees[info.bee].builder_index = bees->builders++;
 					return (best_builder_action(info, grid, bees));
 				}
-/* 				bees->bees[info.bee].role = ATTACKER;
-				return (best_attack_route(grid, &bees->bees[info.bee], info, bees)); */
 				return (new_forage_route(grid, &bees->bees[info.bee], info, bees));
 			}
 			else

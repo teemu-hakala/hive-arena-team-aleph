@@ -17,17 +17,6 @@ void	update_foraging_target(t_cell_history grid[NUM_ROWS][NUM_COLS], \
 	coords_t	best_forage_coord;
 
 	(void) player;
-	// (void) grid;
-	// if (player == 0)
-	// {
-	// 	bees->foraging_target.row = 14;
-	// 	bees->foraging_target.col = 2;
-	// }
-	// else
-	// {
-	// 	bees->foraging_target.row = 14;
-	// 	bees->foraging_target.col = 27;
-	// }
 	best_forage_coord.row = -1;
 	best_forage_coord.col = -1;
 	best_adjacents = 10;
@@ -75,8 +64,6 @@ command_t	best_waypoint_route_defender(t_cell_history grid[NUM_ROWS][NUM_COLS], 
 		if (temp_distance == 0)
 		{
 			bee->target.row = -1;
-			// if (grid[temp_coord.row][temp_coord.col].cell == TARGET_FLOWER)
-			// 	return ((command_t){.action = FORAGE, .direction = d});
 			return ((command_t){.action = MOVE, .direction = d});
 		}
 		if (grid[temp_coord.row][temp_coord.col].cell != EMPTY_ALEPH && grid[temp_coord.row][temp_coord.col].cell != WALL_ENEMY)
@@ -118,7 +105,6 @@ command_t	best_defender_action(agent_info_t info, \
 		flower_direction = find_neighbour(FLOWER_ALEPH, grid, bees->bees[info.bee].coords);
 		if (flower_direction >= 0)
 			return ((command_t) {.action = FORAGE, .direction = flower_direction});
-		//printf("player %d turn %d\n\n", info.player, info.turn);
 		update_heatmap(grid, info.player, bees);
 		if (distance_between_points(bees->bees[FORAGER_BEE_INDEX].coords, \
 			bees->foraging_target) == 1)

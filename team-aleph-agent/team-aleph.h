@@ -9,8 +9,8 @@
 #include <stdbool.h>
 #include "agent.h"
 
-#define TURNS_FORAGING 0 // 200
-#define DEFENDER_FORAGE_TURNS 0 // 100
+#define TURNS_FORAGING 0
+#define DEFENDER_FORAGE_TURNS 0
 #define DEFENDER_BEE_INDEX 3
 #define FORAGER_BEE_INDEX 4
 typedef enum grid_cell_e
@@ -54,7 +54,7 @@ static const coords_t stack_cells[] = {
 static const coords_t builder_offsets[] = {
 	{1, 0},
 	{-1, 0},
-	{0, 1},//{1, 1},
+	{0, 1},
 	{1, 1},
 	{-1, 1},
 };

@@ -2,7 +2,6 @@
 
 command_t think(agent_info_t info)
 {
-//	coords_t bee_coords;
 	static t_cell_history	grid[NUM_ROWS][NUM_COLS];
 	static t_bees			bees;
 
@@ -17,10 +16,7 @@ command_t think(agent_info_t info)
 		bees.foraging_target = (coords_t){.row = -1, .col = -1};
 	}
 
-//	bee_coords.row = info.row;
-//	bee_coords.col = info.col;
 	update_grid(info, grid, bees.bees);
-	// printf("bee %d role %d\n", info.bee, bees.bees[info.bee].role);
 	return (choose_action(info, grid, &bees));
 }
 

@@ -1,18 +1,5 @@
 #include "team-aleph.h"
 
-// static const coords_t scout_targets[2][5] = {
-// 	{{3, 3},
-// 	{ 7, 7},
-// 	{12, 9},
-// 	{17, 7},
-// 	{21, 3}},
-// 	{{3, 26},
-// 	{ 7, 22},
-// 	{12, 20},
-// 	{17, 22},
-// 	{21, 26}}
-// };
-
 void	initialize_bees(t_bee bees[NUM_BEES])
 {
 	for (int b = 0; b < NUM_BEES; b++)
@@ -105,7 +92,7 @@ bool	enemy_bee_is_close_and_adjacent_flower(t_cell_history grid[NUM_ROWS][NUM_CO
 		{
 			if (row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS)
 				continue ;
-			if (grid[row][col].cell == BEE_ENEMY /*|| grid[row][col].cell == BEE_ENEMY_WITH_FLOWER*/)
+			if (grid[row][col].cell == BEE_ENEMY)
 			{
 				for (int d = 0; d < 8; d++)
 				{
@@ -132,7 +119,7 @@ bool	enemy_bee_is_close(t_cell_history grid[NUM_ROWS][NUM_COLS], t_bee *current_
 		{
 			if (row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS)
 				continue ;
-			if (grid[row][col].cell == BEE_ENEMY /*|| grid[row][col].cell == BEE_ENEMY_WITH_FLOWER*/)
+			if (grid[row][col].cell == BEE_ENEMY)
 			{
 				return (true);
 			}
